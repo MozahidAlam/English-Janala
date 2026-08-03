@@ -5,6 +5,7 @@ import { ProgressProvider } from "@/lib/hooks/useProgress";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ServiceWorker } from "@/components/layout/ServiceWorker";
+import { Analytics } from "@vercel/analytics/next";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -110,6 +111,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <ServiceWorker />
         </ProgressProvider>
+        {/* Cookieless visitor counts. No personal data, no cross-site tracking. */}
+        <Analytics />
       </body>
     </html>
   );

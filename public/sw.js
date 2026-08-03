@@ -55,6 +55,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   // Only handle our own origin; APIs and CDNs go straight to the network.
   if (url.origin !== self.location.origin) return;
+  // Vercel's analytics script and beacon must always hit the network.
+  if (url.pathname.startsWith("/_vercel/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

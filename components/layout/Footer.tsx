@@ -20,7 +20,8 @@ export function Footer() {
           </p>
           <p className="font-bangla mt-3 max-w-xs text-sm text-muted">
             মজা করে English Grammar আর Vocabulary শেখার জায়গা। কোনো লগইন লাগে না,
-            কোনো বিজ্ঞাপন নেই, কোনো ফি নেই।
+            কোনো বিজ্ঞাপন নেই, কোনো ফি নেই। শুধু কতজন এসেছেন সেটুকু গোনা হয় —
+            নাম-পরিচয় কিছুই নয়।
           </p>
         </div>
 

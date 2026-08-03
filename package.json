@@ -2,7 +2,7 @@
   "name": "english-janala",
   "version": "2.0.0",
   "private": true,
-  "description": "English Janala \u2014 \u09ae\u099c\u09be \u0995\u09b0\u09c7 English Grammar \u0993 Vocabulary \u09b6\u09c7\u0996\u09be\u09b0 \u09aa\u09cd\u09b2\u09cd\u09af\u09be\u099f\u09ab\u09b0\u09cd\u09ae",
+  "description": "English Janala — মজা করে English Grammar ও Vocabulary শেখার প্ল্যাটফর্ম",
   "engines": {
     "node": ">=20.9.0"
   },
@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "next": "^15.5.22",
     "react": "19.1.1",
     "react-dom": "19.1.1"
