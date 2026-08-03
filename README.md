@@ -1,114 +1,154 @@
-# ENGLISH <img width="25px" src="./assets/logo.png" /> JANALA
+# English <img width="24" src="./public/assets/logo.png" /> জানালা
+
+বাংলাভাষীদের জন্য English Grammar ও Vocabulary শেখার একটি ফ্রি প্ল্যাটফর্ম — মজার
+উদাহরণ, ভুল-ঠিক তুলনা, Spaced Repetition ফ্ল্যাশকার্ড, ফ্রি গ্রামার চেকার আর ৫টি
+মিনি-গেম নিয়ে।
+
+**কোনো ডেটাবেজ নেই। কোনো লগইন নেই। কোনো ব্যাকএন্ড নেই।** পুরো অ্যাপটা স্ট্যাটিক
+হিসেবে বিল্ড হয়, ডেটা আসে ফ্রি পাবলিক API থেকে, আর আপনার প্রোগ্রেস থাকে আপনার
+ব্রাউজারের `localStorage`-এ।
 
 ---
 
-## ⚡ API Endpoints
+## ✨ ফিচার
 
-1. Get ⚡ All Levels
+| মডিউল | কী আছে |
+|---|---|
+| **📖 Grammar** | ৮ ক্যাটাগরিতে ৪৩টি লেসন — Parts of Speech, ১২টি Tense, Voice, Narration, Article, Preposition, Conditional, Clause, Punctuation, Common Mistakes। প্রতিটিতে বাংলায় নিয়ম, সূত্র, ভুল-ঠিক কার্ড, মনে রাখার কৌশল ও কুইজ |
+| **📚 Vocabulary** | লেসনভিত্তিক শব্দ, বাংলা অর্থ ও উচ্চারণ, English definition, IPA, synonym, antonym, collocation, উদাহরণ বাক্য, আসল মানুষের কণ্ঠে অডিও |
+| **🧠 Flashcards** | Leitner box Spaced Repetition + ৫টি মোড: ফ্ল্যাশকার্ড, অর্থ বাছাই, উল্টো খেলা, শুনে বলুন, বানান লিখুন |
+| **🔎 Grammar Guru** | LanguageTool দিয়ে রিয়েল গ্রামার ও বানান চেকার — ভুল, কারণ, সাজেশন আর এক ক্লিকে সংশোধন |
+| **🎮 Games** | Spot the Error, Sentence Builder, Word Match, Hangman, Boss Battle |
+| **📊 Progress** | XP, র‍্যাঙ্ক, স্ট্রিক, ১৮টি ব্যাজ, ৯১ দিনের হিটম্যাপ, SRS box distribution, ডেইলি গোল, ব্যাকআপ Export/Import |
+| **⚙️ Platform** | PWA (অফলাইনে চলে), ডার্ক মোড, সম্পূর্ণ কীবোর্ড-অ্যাক্সেসিবল, SEO + sitemap + JSON-LD, OG share card |
+
+---
+
+## 🧱 টেক স্ট্যাক
+
+- **Next.js 15** (App Router, ৬০+ পেজ স্ট্যাটিক প্রি-রেন্ডার)
+- **TypeScript** (strict)
+- **Tailwind CSS v4** — কাস্টম design system, কোনো UI লাইব্রেরি নেই
+- **কোনো ডেটাবেজ / ORM / Auth নেই**
+
+### ডেটা সোর্স (সবগুলো কী-বিহীন ও CORS-এনাবলড)
+
+| API | কী দেয় |
+|---|---|
+| [Programming Hero Open API](https://openapi.programming-hero.com) | লেসন ও শব্দ, বাংলা অর্থ |
+| [Free Dictionary API](https://dictionaryapi.dev) | definition, IPA, অডিও, synonym/antonym |
+| [Datamuse](https://www.datamuse.com/api/) | collocation, related words, definition fallback |
+| [LanguageTool](https://languagetool.org) | গ্রামার ও বানান চেকিং |
+
+> **স্থিতিস্থাপকতা:** তৃতীয় পক্ষের API বন্ধ থাকলেও সাইট চলে। `lib/data/vocabulary.json`-এ
+> ১৭০টি শব্দের একটি স্ন্যাপশট বান্ডিল করা আছে, আর dictionaryapi.dev ব্যর্থ হলে
+> Datamuse থেকে definition আনা হয়।
+
+---
+
+## 🚀 লোকাল রান
 
 ```bash
-https://openapi.programming-hero.com/api/levels/all
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-1. Get ⚡ Words by Levels <br/>
-   https:// openapi.programming-hero.com/api/level/{id}
+অন্যান্য কমান্ড:
 
 ```bash
-https://openapi.programming-hero.com/api/level/5
+npm run build        # প্রোডাকশন বিল্ড
+npm run start        # বিল্ড করা অ্যাপ চালান
+npm run typecheck    # tsc --noEmit
+npm run lint         # next lint
 ```
 
-1. Get ⚡ Words Detail <br/>
-   https:// openapi.programming-hero.com/api/word/{id}
+---
 
-```bash
-https://openapi.programming-hero.com/api/word/5
+## ☁️ Vercel-এ ডিপ্লয়
+
+1. রিপোটি GitHub-এ পুশ করুন।
+2. [vercel.com/new](https://vercel.com/new) → রিপো ইমপোর্ট করুন।
+3. Framework অটো-ডিটেক্ট হবে (Next.js) — কোনো সেটিং বদলানোর দরকার নেই।
+4. **Deploy** চাপুন।
+
+**Environment variable (ঐচ্ছিক কিন্তু সুপারিশকৃত)** — canonical URL, sitemap আর OG
+ট্যাগ ঠিক রাখতে:
+
+```
+NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 ```
 
-1. Get ⚡ All Words <br/>
+কোনো ডেটাবেজ, সিক্রেট বা API key লাগবে না।
 
-```bash
-https://openapi.programming-hero.com/api/words/all
+---
+
+## 📁 প্রজেক্ট স্ট্রাকচার
+
+```
+app/                     রুট ও পেজ (App Router)
+  grammar/[slug]/        ৪৩টি লেসন পেজ (SSG)
+  games/[slug]/          ৫টি গেম পেজ (SSG)
+  vocabulary/ flashcards/ guru/ dashboard/
+  sitemap.ts robots.ts manifest.ts opengraph-image.tsx
+
+components/
+  layout/   Header, Footer, ThemeToggle, ServiceWorker
+  ui/       Button, Card, Modal, ProgressBar, Confetti, Skeleton…
+  home/ vocab/ study/ grammar/ guru/ games/ progress/
+
+lib/
+  api/      vocabulary.ts, dictionary.ts, languagetool.ts
+  content/  grammar/ (৮টি ক্যাটাগরি ফাইল), games.ts, nav.ts
+  storage/  progress.ts, srs.ts, badges.ts   ← localStorage ইঞ্জিন
+  study/    session.ts                        ← কুইজ/সেশন লজিক
+  hooks/    useProgress.tsx, useSpeech.ts
+  data/     vocabulary.json                   ← অফলাইন স্ন্যাপশট
+
+scripts/build-fallback.mjs   স্ন্যাপশট রিফ্রেশ করার স্ক্রিপ্ট
 ```
 
-# Work To do
-
-### 1. Show Levels on The UI
-
-- [ ] Show a center-aligned heading as Figma
-
 ---
 
-- [ ] Create dynamically generated buttons from **API-01** for each lesson
-- [ ] Lesson Buttons will be displayed on page load
+## ➕ নতুন কনটেন্ট যোগ করা
 
----
+### গ্রামার লেসন
 
-### 2. Show Word Cards Based on Level
+`lib/content/grammar/` এর যেকোনো ক্যাটাগরি ফাইলে একটি অবজেক্ট যোগ করুন:
 
-- [ ] Show a default text that will be displayed in the Vocabulary section initially
-- [ ] on Clicking a Specific Lesson Button Load All the words from **API-02**
-- [ ] Display all words for a selected lesson in a card format, showing:
-
-  - [ ] Word
-  - [ ] Word meaning & pronunciation
-  - [ ] Two buttons with relevant icons as per Figma
-
-- [ ] Show **\*No Word Found** message if no words exist for a lesson
-
----
-
-- [ ] Create functionality to highlight the active lesson button
-
----
-
-### 3. Use Different Color on The Active Level Button
-
-- [ ] After Successfully Loading words of a level , diffirentiate the button so user can understand which button is active
-
-### 4. Vocabulary Details
-
-- [ ] Create functionality to open a modal when clicking the details icon
-- [ ] Data will be load from **API-03**
-- [ ] modal will displays:
-  - [ ] Word with pronunciation
-  - [ ] Example sentence
-  - [ ] Synonyms
-  - [ ] A "Complete Learning" button to close the modal
-
-### 5. Handling Invalid Data
-
-- [ ] avoid displaying falsy values like `undefined` or `null`
-- [ ] display relevant words if no data is found
-
-### 6. Loading Spinner
-
-- [ ] Create a loading spinner that will be display when vocabulary is loading from API
-
-### 7. Implement Search Functionality
-
-- [ ] Take a input Box.
-- [ ] on Changing value It will Search word and show in the UI.
-- [ ] If anyone Do search reset active button
-
-### 8. Save Word Feature
-
-- [ ] in the UI of Card add a button `Heart icon`
-- [ ] on Clicking it. Store the Word in the Saved Box
-- [ ] Show Saved words in a Different Section.
-
-### 9. Speak your Vocabularies
-
-- [ ] Create functionality for voice pronunciation of vocabulary words
-- [ ] Use below function and implement on clicking sound icon
-
-```js
-function pronounceWord(word) {
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.lang = "en-EN"; // English
-  window.speechSynthesis.speak(utterance);
+```ts
+{
+  slug: "my-topic",
+  category: "tense",
+  title: "My Topic",
+  titleBn: "আমার টপিক",
+  hook: "মজার এক লাইনের ভূমিকা",
+  rule: "বাংলায় মূল নিয়ম",
+  points: ["পয়েন্ট ১", "পয়েন্ট ২"],
+  formulas: [{ label: "গঠন", formula: "S + V + O", example: "He eats rice." }],
+  examples: ["উদাহরণ বাক্য"],
+  wrongRight: [{ wrong: "…", right: "…", why: "কেন" }],
+  trick: "মনে রাখার কৌশল",
+  quiz: [{ q: "প্রশ্ন?", options: ["ক","খ","গ","ঘ"], answer: 1, explain: "ব্যাখ্যা" }],
+  minutes: 6,
 }
 ```
 
-For More >> you can explore this implementation 👉 [https://codepen.io/Ferdous-Zihad/pen/PwoJMmJ](https://codepen.io/Ferdous-Zihad/pen/PwoJMmJ)
+রুট, sitemap, সার্চ, Boss Battle-এর প্রশ্ন আর Spot-the-Error-এর ডেটা — সব
+স্বয়ংক্রিয়ভাবে আপডেট হয়ে যাবে।
+
+### শব্দ ভান্ডার রিফ্রেশ
+
+```bash
+node scripts/build-fallback.mjs
+```
 
 ---
+
+## 🔐 প্রাইভেসি
+
+কোনো অ্যাকাউন্ট নেই, কোনো কুকি নেই, কোনো অ্যানালিটিক্স নেই। আপনার XP, স্ট্রিক,
+ব্যাজ আর শেখা শব্দ শুধু আপনার ব্রাউজারে থাকে। Grammar Guru-তে লেখা টেক্সট
+LanguageTool-এ পাঠানো হয় চেক করার জন্য, কিন্তু কোথাও সংরক্ষণ করা হয় না।
+
+অন্য ডিভাইসে প্রোগ্রেস নিতে চাইলে **Progress → 💾 আপনার ডেটা → প্রোগ্রেস ব্যাকআপ**
+থেকে ফাইল নামিয়ে সেখানে ইমপোর্ট করুন।
