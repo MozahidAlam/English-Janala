@@ -1,0 +1,213 @@
+/**
+ * Vocabulary data access.
+ *
+ * Live source: Programming Hero open API (no key, CORS-enabled).
+ * Fallback:    bundled snapshot in lib/data/vocabulary.json.
+ *
+ * Every call degrades to the snapshot instead of throwing, so a third-party
+ * outage never blanks the UI.
+ */
+import snapshot from "@/lib/data/vocabulary.json";
+import curated from "@/lib/data/curated.json";
+import type { Lesson, Word, WordDetail } from "@/lib/types";
+
+const BASE = "https://openapi.programming-hero.com/api";
+// Short on purpose: every call has a bundled snapshot to fall back to, so it is
+// better to show the snapshot fast than to stall the UI waiting on the network.
+const TIMEOUT_MS = 5_000;
+
+interface SnapshotWord {
+  id: number;
+  level: number;
+  word: string;
+  meaning: string | null;
+  pronunciation: string | null;
+  sentence: string | null;
+  points: number | null;
+  partsOfSpeech: string | null;
+  synonyms: string[];
+}
+
+const RAW = snapshot as {
+  levels: Lesson[];
+  words: SnapshotWord[];
+  snapshotAt: string;
+};
+
+/**
+ * Levels 4 and 7 come back empty from the upstream API, so those lessons ship
+ * hand-written words instead. They live in their own file so regenerating the
+ * API snapshot never wipes them.
+ */
+const CURATED = (curated as { words: SnapshotWord[] }).words;
+
+const SNAP = { ...RAW, words: [...RAW.words, ...CURATED] };
+
+/** Curated words for a level, if we wrote any. */
+function curatedFor(levelNo: number): SnapshotWord[] {
+  return CURATED.filter((w) => w.level === levelNo);
+}
+
+/** In-memory memo so repeated navigations don't refetch. */
+const memo = new Map<string, unknown>();
+/** De-dupes concurrent requests for the same key. */
+const inFlight = new Map<string, Promise<unknown>>();
+
+async function getJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`Vocabulary API ${res.status}`);
+  const json = (await res.json()) as { status?: boolean; data?: T };
+  if (json.data === undefined || json.data === null) {
+    throw new Error("Vocabulary API returned no data");
+  }
+  return json.data;
+}
+
+async function cached<T>(key: string, load: () => Promise<T>, fallback: T): Promise<T> {
+  const hit = memo.get(key);
+  if (hit !== undefined) return hit as T;
+
+  const pending = inFlight.get(key);
+  if (pending) return pending as Promise<T>;
+
+  const task = load()
+    .then((value) => {
+      memo.set(key, value);
+      return value;
+    })
+    .catch(() => {
+      // Upstream unavailable — serve the bundled snapshot rather than failing.
+      memo.set(key, fallback);
+      return fallback;
+    })
+    .finally(() => inFlight.delete(key));
+
+  inFlight.set(key, task);
+  return task;
+}
+
+/** True when a value is already in memory, so callers can skip a loading state. */
+export function isCached(key: string): boolean {
+  return memo.has(key);
+}
+
+/** Snapshot words for one level — synchronous, for instant first paint. */
+export function snapshotLevel(levelNo: number): readonly Word[] {
+  return SNAP.words.filter((w) => w.level === levelNo).map(toWord);
+}
+
+function toWord(raw: SnapshotWord | Record<string, unknown>): Word {
+  const r = raw as Record<string, unknown>;
+  return {
+    id: Number(r.id),
+    level: Number(r.level),
+    word: String(r.word ?? ""),
+    meaning: (r.meaning as string | null) ?? null,
+    pronunciation: (r.pronunciation as string | null) ?? null,
+  };
+}
+
+function toDetail(raw: Record<string, unknown>, id: number): WordDetail {
+  return {
+    ...toWord({ ...raw, id }),
+    sentence: (raw.sentence as string | null) ?? null,
+    points: (raw.points as number | null) ?? null,
+    partsOfSpeech: (raw.partsOfSpeech as string | null) ?? null,
+    synonyms: Array.isArray(raw.synonyms) ? (raw.synonyms as string[]) : [],
+  };
+}
+
+/* ------------------------------------------------------------------------- */
+
+export function snapshotWords(): readonly Word[] {
+  return SNAP.words.map(toWord);
+}
+
+export function snapshotDetail(id: number): WordDetail | null {
+  const w = SNAP.words.find((x) => x.id === id);
+  return w ? toDetail(w as unknown as Record<string, unknown>, id) : null;
+}
+
+/** All lessons/levels, ordered. */
+export async function getLessons(): Promise<readonly Lesson[]> {
+  return cached(
+    "lessons",
+    async () => {
+      const data = await getJson<Array<Record<string, unknown>>>("/levels/all");
+      return data
+        .map((l) => ({
+          id: Number(l.id),
+          levelNo: Number(l.level_no),
+          lessonName: String(l.lessonName ?? `Lesson ${l.level_no}`),
+        }))
+        .sort((a, b) => a.levelNo - b.levelNo);
+    },
+    SNAP.levels,
+  );
+}
+
+/**
+ * Words belonging to one level. Live results are merged with our curated words
+ * so a level the API returns empty still has content.
+ */
+export async function getWordsByLevel(levelNo: number): Promise<readonly Word[]> {
+  const extra = curatedFor(levelNo).map(toWord);
+  const fallback = snapshotLevel(levelNo);
+  return cached(
+    `level:${levelNo}`,
+    async () => {
+      const data = await getJson<Array<Record<string, unknown>>>(`/level/${levelNo}`);
+      const live = data.map(toWord);
+      const seen = new Set(live.map((w) => w.id));
+      return [...live, ...extra.filter((w) => !seen.has(w.id))];
+    },
+    fallback,
+  );
+}
+
+/** Every word across every level. */
+export async function getAllWords(): Promise<readonly Word[]> {
+  return cached(
+    "all",
+    async () => {
+      const data = await getJson<Array<Record<string, unknown>>>("/words/all");
+      const live = data.map(toWord);
+      const seen = new Set(live.map((w) => w.id));
+      const merged = [...live, ...CURATED.filter((w) => !seen.has(w.id)).map(toWord)];
+      // /words/all omits some Bangla meanings — patch them from the snapshot.
+      return merged.map((w) => {
+        if (w.meaning) return w;
+        const snap = SNAP.words.find((s) => s.id === w.id);
+        return snap ? { ...w, meaning: snap.meaning, pronunciation: w.pronunciation ?? snap.pronunciation } : w;
+      });
+    },
+    snapshotWords(),
+  );
+}
+
+/** Full detail for a single word. */
+export async function getWordDetail(id: number): Promise<WordDetail | null> {
+  const fallback = snapshotDetail(id);
+  // Curated words don't exist upstream — skip the round trip and the timeout.
+  if (CURATED.some((w) => w.id === id)) return fallback;
+  return cached(
+    `word:${id}`,
+    async () => {
+      const data = await getJson<Record<string, unknown>>(`/word/${id}`);
+      const detail = toDetail(data, id);
+      // Detail endpoint can return a word without its Bangla meaning.
+      if (detail.meaning) return detail;
+      return fallback ? { ...detail, meaning: fallback.meaning } : detail;
+    },
+    fallback,
+  );
+}
+
+/** Words that actually have content, useful for quizzes and games. */
+export function playableWords(): readonly WordDetail[] {
+  return SNAP.words
+    .filter((w) => w.word && w.meaning)
+    .map((w) => toDetail(w as unknown as Record<string, unknown>, w.id));
+}

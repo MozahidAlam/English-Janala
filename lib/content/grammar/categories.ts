@@ -1,0 +1,68 @@
+import type { GrammarCategory } from "@/lib/types";
+
+export const CATEGORIES: readonly GrammarCategory[] = [
+  {
+    id: "foundation",
+    title: "Foundation",
+    titleBn: "ভিত্তি",
+    blurb: "Parts of Speech আর বাক্যের গঠন — এখান থেকেই সব শুরু।",
+    emoji: "🧱",
+    accent: "sky",
+  },
+  {
+    id: "tense",
+    title: "Tense",
+    titleBn: "কাল",
+    blurb: "১২টা Tense — কোনটা কখন, কেন। ভয় পাওয়ার কিছু নেই।",
+    emoji: "⏰",
+    accent: "violet",
+  },
+  {
+    id: "verbs",
+    title: "Verbs & Forms",
+    titleBn: "ক্রিয়ার রূপ",
+    blurb: "Right form of verb, Modal, Gerund, Infinitive — verb-এর সব খেলা।",
+    emoji: "🏃",
+    accent: "mint",
+  },
+  {
+    id: "sentence",
+    title: "Sentence Work",
+    titleBn: "বাক্য রূপান্তর",
+    blurb: "Voice, Narration, Conditional, Transformation — পরীক্ষার প্রিয় টপিক।",
+    emoji: "🔄",
+    accent: "coral",
+  },
+  {
+    id: "connectors",
+    title: "Small but Deadly",
+    titleBn: "ছোট কিন্তু ভয়ংকর",
+    blurb: "Article, Preposition, Conjunction — সবচেয়ে বেশি ভুল এখানেই হয়।",
+    emoji: "🔗",
+    accent: "amber",
+  },
+  {
+    id: "advanced",
+    title: "Advanced",
+    titleBn: "উচ্চতর",
+    blurb: "Clause, Subject-Verb Agreement, Sequence of Tense।",
+    emoji: "🎓",
+    accent: "grape",
+  },
+  {
+    id: "polish",
+    title: "Polish",
+    titleBn: "চূড়ান্ত পরিপাটি",
+    blurb: "Punctuation, Capitalization, Spelling — লেখাকে প্রফেশনাল করুন।",
+    emoji: "✨",
+    accent: "sky",
+  },
+  {
+    id: "mistakes",
+    title: "Common Mistakes",
+    titleBn: "আমরা যে ভুলগুলো করি",
+    blurb: "বাংলাভাষীদের সবচেয়ে কমন ইংরেজি ভুল আর তার সমাধান।",
+    emoji: "🚨",
+    accent: "coral",
+  },
+];
