@@ -105,7 +105,19 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
     );
   }
 
-  if (!word) return null;
+  if (!word) {
+    return (
+      <GameOver
+        score={score}
+        onRestart={start}
+        detail={
+          <p className="font-bangla text-sm text-muted">
+            এই মুহূর্তে খেলার মতো শব্দ পাওয়া যায়নি। একটু পরে আবার চেষ্টা করুন।
+          </p>
+        }
+      />
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl">

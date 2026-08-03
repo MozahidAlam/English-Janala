@@ -72,7 +72,10 @@ export default async function LessonPage({
 
       {/* ---------------------------------------------------------- header */}
       <nav className="mb-5 flex flex-wrap items-center gap-2 text-sm" aria-label="ব্রেডক্রাম্ব">
-        <Link href="/grammar" className="font-bold hover:underline">
+        <Link
+          href="/grammar"
+          className="inline-flex min-h-11 items-center font-bold hover:underline"
+        >
           গ্রামার
         </Link>
         <span aria-hidden className="text-muted">
@@ -80,7 +83,7 @@ export default async function LessonPage({
         </span>
         <Link
           href={`/grammar#${lesson.category}`}
-          className="font-bangla font-bold hover:underline"
+          className="font-bangla inline-flex min-h-11 items-center font-bold hover:underline"
         >
           {category?.titleBn}
         </Link>

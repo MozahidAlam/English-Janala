@@ -42,7 +42,10 @@ export default async function GamePage({
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
       <nav className="mb-6 text-sm" aria-label="ব্রেডক্রাম্ব">
-        <Link href="/games" className="font-bold hover:underline">
+        <Link
+          href="/games"
+          className="inline-flex min-h-11 items-center font-bold hover:underline"
+        >
           ← সব গেম
         </Link>
       </nav>

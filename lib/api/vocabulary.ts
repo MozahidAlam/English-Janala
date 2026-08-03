@@ -8,6 +8,7 @@
  * outage never blanks the UI.
  */
 import snapshot from "@/lib/data/vocabulary.json";
+import curated from "@/lib/data/curated.json";
 import type { Lesson, Word, WordDetail } from "@/lib/types";
 
 const BASE = "https://openapi.programming-hero.com/api";
@@ -27,11 +28,25 @@ interface SnapshotWord {
   synonyms: string[];
 }
 
-const SNAP = snapshot as {
+const RAW = snapshot as {
   levels: Lesson[];
   words: SnapshotWord[];
   snapshotAt: string;
 };
+
+/**
+ * Levels 4 and 7 come back empty from the upstream API, so those lessons ship
+ * hand-written words instead. They live in their own file so regenerating the
+ * API snapshot never wipes them.
+ */
+const CURATED = (curated as { words: SnapshotWord[] }).words;
+
+const SNAP = { ...RAW, words: [...RAW.words, ...CURATED] };
+
+/** Curated words for a level, if we wrote any. */
+function curatedFor(levelNo: number): SnapshotWord[] {
+  return CURATED.filter((w) => w.level === levelNo);
+}
 
 /** In-memory memo so repeated navigations don't refetch. */
 const memo = new Map<string, unknown>();
@@ -133,14 +148,20 @@ export async function getLessons(): Promise<readonly Lesson[]> {
   );
 }
 
-/** Words belonging to one level. */
+/**
+ * Words belonging to one level. Live results are merged with our curated words
+ * so a level the API returns empty still has content.
+ */
 export async function getWordsByLevel(levelNo: number): Promise<readonly Word[]> {
-  const fallback = SNAP.words.filter((w) => w.level === levelNo).map(toWord);
+  const extra = curatedFor(levelNo).map(toWord);
+  const fallback = snapshotLevel(levelNo);
   return cached(
     `level:${levelNo}`,
     async () => {
       const data = await getJson<Array<Record<string, unknown>>>(`/level/${levelNo}`);
-      return data.map(toWord);
+      const live = data.map(toWord);
+      const seen = new Set(live.map((w) => w.id));
+      return [...live, ...extra.filter((w) => !seen.has(w.id))];
     },
     fallback,
   );
@@ -153,8 +174,10 @@ export async function getAllWords(): Promise<readonly Word[]> {
     async () => {
       const data = await getJson<Array<Record<string, unknown>>>("/words/all");
       const live = data.map(toWord);
+      const seen = new Set(live.map((w) => w.id));
+      const merged = [...live, ...CURATED.filter((w) => !seen.has(w.id)).map(toWord)];
       // /words/all omits some Bangla meanings — patch them from the snapshot.
-      return live.map((w) => {
+      return merged.map((w) => {
         if (w.meaning) return w;
         const snap = SNAP.words.find((s) => s.id === w.id);
         return snap ? { ...w, meaning: snap.meaning, pronunciation: w.pronunciation ?? snap.pronunciation } : w;
@@ -167,6 +190,8 @@ export async function getAllWords(): Promise<readonly Word[]> {
 /** Full detail for a single word. */
 export async function getWordDetail(id: number): Promise<WordDetail | null> {
   const fallback = snapshotDetail(id);
+  // Curated words don't exist upstream — skip the round trip and the timeout.
+  if (CURATED.some((w) => w.id === id)) return fallback;
   return cached(
     `word:${id}`,
     async () => {

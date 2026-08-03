@@ -37,6 +37,7 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
   const [index, setIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [flash, setFlash] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const due = hydrated ? dueCards(state).length : 0;
   const boxes = hydrated ? boxCounts(state) : { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -47,7 +48,11 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
       const words = weakOnly
         ? pickWeakWords(pool, state, SESSION_SIZE)
         : pickSessionWords(pool, state, SESSION_SIZE);
-      if (words.length === 0) return;
+      if (words.length === 0) {
+        setNotice("এই মুহূর্তে চর্চার মতো শব্দ পাওয়া যায়নি। একটু পরে চেষ্টা করুন।");
+        return;
+      }
+      setNotice(null);
       setMode(nextMode);
       setQueue(words);
       setIndex(0);
@@ -66,8 +71,9 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
   const handleSpeak = useCallback(
     (text: string) => {
       const rich = cachedEnrichment(text);
-      speak(text, rich?.audioUrl ?? null);
-      if (!rich) void enrichWord(text);
+      speak(text, rich?.audioUrl ?? null, {
+        getAudioUrl: () => enrichWord(text).then((r) => r.audioUrl),
+      });
     },
     [speak],
   );
@@ -131,6 +137,12 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
             ))}
           </div>
         </Card>
+
+        {notice ? (
+          <div className="brut tint-amber font-bangla p-4" role="status">
+            <p className="font-bold text-ink">{notice}</p>
+          </div>
+        ) : null}
 
         <div>
           <h2 className="font-bangla mb-4 text-lg font-bold">মোড বেছে নিন</h2>

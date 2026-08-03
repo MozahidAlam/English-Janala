@@ -71,7 +71,11 @@ export function WordDetail({ word }: { word: Word }) {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => speak(word.word, rich?.audioUrl)}
+            onClick={() =>
+              speak(word.word, rich?.audioUrl, {
+                getAudioUrl: () => enrichWord(word.word).then((r) => r.audioUrl),
+              })
+            }
             aria-label="উচ্চারণ শুনুন"
           >
             {speaking ? "🔊…" : "🔊 শুনুন"}

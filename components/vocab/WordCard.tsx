@@ -29,7 +29,7 @@ export function WordCard({
           aria-label={bookmarked ? "বুকমার্ক সরান" : "বুকমার্ক করুন"}
           aria-pressed={bookmarked}
           title={bookmarked ? "বুকমার্ক সরান" : "বুকমার্ক করুন"}
-          className="text-xl leading-none transition-transform hover:scale-125"
+          className="-m-2 flex h-11 w-11 items-center justify-center rounded-lg text-xl leading-none transition-transform hover:scale-125"
         >
           <span aria-hidden>{bookmarked ? "🔖" : "🏷️"}</span>
         </button>

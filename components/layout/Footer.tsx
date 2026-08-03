@@ -29,10 +29,13 @@ export function Footer() {
           <h2 className="mb-3 text-sm font-extrabold tracking-widest uppercase">
             শেখা শুরু করুন
           </h2>
-          <ul className="space-y-1.5 text-sm">
+          <ul className="text-sm">
             {NAV.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:underline">
+                <Link
+                  href={item.href}
+                  className="inline-flex min-h-11 items-center hover:underline"
+                >
                   <span aria-hidden>{item.emoji}</span> {item.label}
                 </Link>
               </li>
@@ -44,14 +47,14 @@ export function Footer() {
           <h2 className="mb-3 text-sm font-extrabold tracking-widest uppercase">
             ডেটা সোর্স
           </h2>
-          <ul className="space-y-1.5 text-sm text-muted">
+          <ul className="text-sm text-muted">
             {SOURCES.map((s) => (
               <li key={s.href}>
                 <a
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline"
+                  className="inline-flex min-h-11 items-center hover:underline"
                 >
                   {s.name} ↗
                 </a>

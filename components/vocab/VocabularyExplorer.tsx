@@ -115,8 +115,11 @@ export function VocabularyExplorer({
   const handleSpeak = useCallback(
     (word: Word) => {
       const rich = cachedEnrichment(word.word);
-      speak(word.word, rich?.audioUrl ?? null);
-      if (!rich) void enrichWord(word.word);
+      speak(word.word, rich?.audioUrl ?? null, {
+        // On phones the synthesiser is sometimes silent; fall back to the
+        // recorded pronunciation instead of leaving the tap with no sound.
+        getAudioUrl: () => enrichWord(word.word).then((r) => r.audioUrl),
+      });
     },
     [speak],
   );
