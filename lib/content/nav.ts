@@ -36,10 +36,4 @@ export const NAV: readonly NavItem[] = [
     emoji: "🎮",
     desc: "খেলতে খেলতে শেখা",
   },
-  {
-    href: "/dashboard",
-    label: "Progress",
-    emoji: "📊",
-    desc: "আপনার অগ্রগতি",
-  },
 ];

@@ -113,7 +113,7 @@ export interface GrammarLesson {
   readonly minutes: number;
 }
 
-/* ---------------------------------- Progress ---------------------------------- */
+/* ---------------------------------- Learner data ---------------------------------- */
 
 export type SrsBox = 1 | 2 | 3 | 4 | 5;
 
@@ -128,41 +128,16 @@ export interface SrsCard {
   readonly lapses: number;
 }
 
-export interface DayActivity {
-  readonly xp: number;
-  readonly words: number;
-  readonly lessons: number;
-  readonly quizzes: number;
-}
-
-export interface ProgressState {
+/**
+ * Everything the app remembers about a learner. Intentionally small — it exists
+ * to make spaced repetition and saved words work, not to score anyone.
+ */
+export interface LearnerState {
   readonly version: number;
-  readonly xp: number;
-  readonly streak: number;
-  readonly bestStreak: number;
-  /** ISO date of the last day with any activity. */
-  readonly lastActive: string | null;
-  readonly dailyGoal: number;
-  /** yyyy-mm-dd -> activity totals. */
-  readonly activity: Readonly<Record<string, DayActivity>>;
   readonly srs: Readonly<Record<string, SrsCard>>;
   readonly bookmarks: readonly number[];
   /** Grammar lesson slugs that have been read. */
   readonly readLessons: readonly string[];
-  /** Grammar lesson slug -> best quiz score percentage. */
-  readonly lessonScores: Readonly<Record<string, number>>;
-  /** Game slug -> best score. */
-  readonly gameScores: Readonly<Record<string, number>>;
-  readonly badges: readonly string[];
-  readonly createdAt: string;
-}
-
-export interface Badge {
-  readonly id: string;
-  readonly title: string;
-  readonly desc: string;
-  readonly emoji: string;
-  readonly test: (p: ProgressState) => boolean;
 }
 
 /* ---------------------------------- Grammar Guru ---------------------------------- */

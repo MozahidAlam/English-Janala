@@ -218,6 +218,53 @@ h4 {
   -webkit-box-decoration-break: clone;
 }
 
+/* --------------------------------------------------------------------------
+   Tints — pastel fills that stay readable in BOTH themes.
+
+   These pair a light background with ink text on purpose. Never set a pastel
+   background with an inline style: in dark mode the inherited foreground is
+   near-white and the content disappears. Always reach for a tint utility.
+   -------------------------------------------------------------------------- */
+@utility tint-sky {
+  background-color: #cfe9ff;
+  color: #16151d;
+}
+@utility tint-mint {
+  background-color: #d7f7ec;
+  color: #16151d;
+}
+@utility tint-amber {
+  background-color: #ffe6b0;
+  color: #16151d;
+}
+@utility tint-lemon {
+  background-color: #fff0c2;
+  color: #16151d;
+}
+@utility tint-coral {
+  background-color: #ffe0e0;
+  color: #16151d;
+}
+@utility tint-rose {
+  background-color: #ffd6d6;
+  color: #16151d;
+}
+@utility tint-violet {
+  background-color: #e4dcff;
+  color: #16151d;
+}
+
+/* Muted text that stays legible inside a tint block. */
+.tint-sky .tint-muted,
+.tint-mint .tint-muted,
+.tint-amber .tint-muted,
+.tint-lemon .tint-muted,
+.tint-coral .tint-muted,
+.tint-rose .tint-muted,
+.tint-violet .tint-muted {
+  color: color-mix(in srgb, #16151d 68%, transparent);
+}
+
 /* Editorial hairline grid backdrop */
 @utility grid-paper {
   background-image:

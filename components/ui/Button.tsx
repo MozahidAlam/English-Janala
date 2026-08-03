@@ -31,8 +31,8 @@ function classes(variant: Variant, size: Size, tone: Tone, extra?: string) {
       : variant === "accent"
         ? cn(TONE_BG[tone], "shadow-(--shadow-hard-lg)")
         : variant === "outline"
-          ? "surface text-[color:var(--fg)]"
-          : "border-transparent shadow-none text-[color:var(--fg)] hover:surface-alt";
+          ? "surface text-(--fg)"
+          : "border-transparent shadow-none text-(--fg) hover:surface-alt";
   const shadow = variant === "ghost" ? "" : "shadow-(--shadow-hard)";
   return cn(base, SIZE[size], look, shadow, extra);
 }

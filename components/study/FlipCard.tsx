@@ -43,8 +43,7 @@ export function FlipCard({
           </div>
 
           <div
-            className="brut-lg flip-face flip-face-back flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center"
-            style={{ backgroundColor: "#d7f7ec" }}
+            className="brut-lg flip-face flip-face-back tint-mint flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center"
           >
             <span className="font-bangla text-3xl font-extrabold break-words text-ink">
               {word.meaning}

@@ -7,7 +7,9 @@ import type { EnrichedDefinition, WordEnrichment } from "@/lib/types";
 
 const DICT = "https://api.dictionaryapi.dev/api/v2/entries/en";
 const DATAMUSE = "https://api.datamuse.com/words";
-const TIMEOUT_MS = 9_000;
+// Kept short on purpose: enrichment is optional garnish, so a slow upstream
+// must never be what the learner is waiting on.
+const TIMEOUT_MS = 5_000;
 
 const EMPTY: WordEnrichment = {
   phonetic: null,
@@ -19,6 +21,16 @@ const EMPTY: WordEnrichment = {
 };
 
 const cache = new Map<string, WordEnrichment>();
+/** De-dupes concurrent requests for the same word (card click + speak button). */
+const inFlight = new Map<string, Promise<WordEnrichment>>();
+
+/**
+ * Already-resolved enrichment, or null. Lets callers render/play instantly on a
+ * cache hit instead of awaiting a promise that would resolve on the next tick.
+ */
+export function cachedEnrichment(word: string): WordEnrichment | null {
+  return cache.get(word.toLowerCase()) ?? null;
+}
 
 interface DictPhonetic {
   text?: string;
@@ -181,6 +193,15 @@ export async function enrichWord(word: string): Promise<WordEnrichment> {
   const hit = cache.get(key);
   if (hit) return hit;
 
+  const pending = inFlight.get(key);
+  if (pending) return pending;
+
+  const task = loadEnrichment(word, key).finally(() => inFlight.delete(key));
+  inFlight.set(key, task);
+  return task;
+}
+
+async function loadEnrichment(word: string, key: string): Promise<WordEnrichment> {
   const [entries, collocations] = await Promise.all([
     fetchDictionary(word),
     fetchCollocations(word),

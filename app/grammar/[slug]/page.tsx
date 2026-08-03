@@ -11,7 +11,7 @@ import { LessonQuiz } from "@/components/grammar/LessonQuiz";
 import { LessonReader } from "@/components/grammar/LessonReader";
 import { Card } from "@/components/ui/Card";
 import { ButtonLink } from "@/components/ui/Button";
-import { accentColor, toBn } from "@/lib/utils";
+import { accentColor, readableOn, toBn } from "@/lib/utils";
 
 export function generateStaticParams() {
   return GRAMMAR_LESSONS.map((l) => ({ slug: l.slug }));
@@ -89,8 +89,8 @@ export default async function LessonPage({
       <header className="mb-8">
         <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-extrabold">
           <span
-            className="rounded-full border-2 border-line px-3 py-1 text-ink"
-            style={{ backgroundColor: accent }}
+            className="rounded-full border-2 border-line px-3 py-1"
+            style={{ backgroundColor: accent, color: readableOn(accent) }}
           >
             {category?.emoji} {category?.title}
           </span>
@@ -102,7 +102,7 @@ export default async function LessonPage({
           </span>
         </div>
 
-        <h1 className="text-[length:var(--text-display)]">{lesson.title}</h1>
+        <h1 className="text-display">{lesson.title}</h1>
         <p className="font-bangla mt-1 text-2xl font-bold text-muted">{lesson.titleBn}</p>
       </header>
 
@@ -179,21 +179,19 @@ export default async function LessonPage({
               <div key={i} className="brut overflow-hidden p-0">
                 <div className="grid sm:grid-cols-2">
                   <div
-                    className="border-b-2 border-line p-4 sm:border-r-2 sm:border-b-0"
-                    style={{ backgroundColor: "#ffe0e0" }}
-                  >
+                    className="tint-coral border-b-2 border-line p-4 sm:border-r-2 sm:border-b-0">
                     <p className="mb-1 text-xs font-extrabold text-ink/60">❌ ভুল</p>
                     <p className="font-semibold text-ink line-through decoration-2">
                       {wr.wrong}
                     </p>
                   </div>
-                  <div className="p-4" style={{ backgroundColor: "#d7f7ec" }}>
+                  <div className="tint-mint p-4">
                     <p className="mb-1 text-xs font-extrabold text-ink/60">✅ ঠিক</p>
                     <p className="font-semibold text-ink">{wr.right}</p>
                   </div>
                 </div>
                 <p className="font-bangla border-t-2 border-line px-4 py-3 text-sm text-muted">
-                  <strong className="text-[color:var(--fg)]">কেন:</strong> {wr.why}
+                  <strong className="text-(--fg)">কেন:</strong> {wr.why}
                 </p>
               </div>
             ))}
@@ -203,9 +201,7 @@ export default async function LessonPage({
         {/* ---------------------------------------------------------- trick */}
         {lesson.trick ? (
           <div
-            className="brut-lg flex gap-4 p-6"
-            style={{ backgroundColor: "#fff0c2" }}
-          >
+            className="brut-lg tint-lemon flex gap-4 p-6">
             <span className="text-4xl" aria-hidden>
               🧠
             </span>

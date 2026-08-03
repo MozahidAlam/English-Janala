@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { WordDetail } from "@/lib/types";
 import { useProgress } from "@/lib/hooks/useProgress";
 import { useSpeech } from "@/lib/hooks/useSpeech";
-import { enrichWord } from "@/lib/api/dictionary";
+import { cachedEnrichment, enrichWord } from "@/lib/api/dictionary";
 import { boxCounts, dueCards } from "@/lib/storage/srs";
 import {
   buildChoices,
@@ -19,7 +19,7 @@ import {
 import { FlipCard } from "@/components/study/FlipCard";
 import { ChoiceQuestion } from "@/components/study/ChoiceQuestion";
 import { SpellingQuestion } from "@/components/study/SpellingQuestion";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Confetti } from "@/components/ui/Confetti";
@@ -58,12 +58,26 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
     [pool, state],
   );
 
-  // Preload the audio for the listening mode's current word.
+  /**
+   * Play a word without waiting on the network: use the cached recording when
+   * we already have it, otherwise speak via the synthesiser immediately and
+   * warm the cache for next time.
+   */
+  const handleSpeak = useCallback(
+    (text: string) => {
+      const rich = cachedEnrichment(text);
+      speak(text, rich?.audioUrl ?? null);
+      if (!rich) void enrichWord(text);
+    },
+    [speak],
+  );
+
+  // Listening mode plays the prompt as soon as the question appears.
   useEffect(() => {
     if (phase === "running" && mode === "listening" && current) {
-      void enrichWord(current.word).then((r) => speak(current.word, r.audioUrl));
+      handleSpeak(current.word);
     }
-  }, [phase, mode, current, speak]);
+  }, [phase, mode, current, handleSpeak]);
 
   const handleAnswer = useCallback(
     (correct: boolean) => {
@@ -79,13 +93,6 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
       }, 500);
     },
     [current, index, queue.length, reviewWord],
-  );
-
-  const handleSpeak = useCallback(
-    (text: string) => {
-      void enrichWord(text).then((r) => speak(text, r.audioUrl));
-    },
-    [speak],
   );
 
   const choices = useMemo(() => {
@@ -204,9 +211,6 @@ export function StudySession({ pool }: { pool: readonly WordDetail[] }) {
               🎛️ মোড বদলান
             </Button>
           </div>
-          <ButtonLink href="/dashboard" variant="ghost" size="sm">
-            📊 প্রোগ্রেস দেখুন
-          </ButtonLink>
         </Card>
       </>
     );

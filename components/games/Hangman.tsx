@@ -8,12 +8,10 @@ import {
   GameHud,
   GameIntro,
   GameOver,
-  useGameScore,
   type GamePhase,
 } from "@/components/games/GameShell";
 import { cn } from "@/lib/utils";
 
-const SLUG = "hangman";
 const MAX_LIVES = 6;
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
 const STAGES = ["😀", "🙂", "😐", "😟", "😨", "😰", "💀"];
@@ -30,7 +28,6 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
   const [score, setScore] = useState(0);
   const [solved, setSolved] = useState(0);
   const [roundState, setRoundState] = useState<"playing" | "won" | "lost">("playing");
-  const { best, save } = useGameScore(SLUG);
 
   const nextWord = useCallback(() => {
     const candidates = playable(pool);
@@ -48,10 +45,6 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
     setPhase("playing");
   };
 
-  useEffect(() => {
-    if (phase === "over" && score > 0) save(score);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
 
   const letters = word ? word.word.toLowerCase().split("") : [];
   const revealed = letters.every((ch) => guessed.has(ch));
@@ -91,7 +84,6 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
           `ভুল অনুমানে একটি লাইফ যাবে — মোট ${toBn(MAX_LIVES)}টি লাইফ।`,
           "যত কম ভুলে শব্দ ধরবেন, তত বেশি পয়েন্ট।",
         ]}
-        best={best}
         onStart={start}
         color="#ffb020"
       />
@@ -102,7 +94,6 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
     return (
       <GameOver
         score={score}
-        best={best}
         onRestart={start}
         detail={
           <p className="font-bangla text-sm text-muted">
@@ -149,12 +140,12 @@ export function Hangman({ pool }: { pool: readonly WordDetail[] }) {
         </div>
 
         {roundState === "won" ? (
-          <p className="anim-pop font-bangla text-xl font-extrabold text-[color:var(--color-mint)]">
+          <p className="anim-pop font-bangla text-xl font-extrabold text-mint">
             🎉 পেরেছেন! পরের শব্দ আসছে…
           </p>
         ) : null}
         {roundState === "lost" ? (
-          <p className="anim-pop font-bangla text-xl font-extrabold text-[color:var(--color-coral)]">
+          <p className="anim-pop font-bangla text-xl font-extrabold text-coral">
             💀 শব্দটি ছিল “{word.word}”
           </p>
         ) : null}

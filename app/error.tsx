@@ -20,9 +20,9 @@ export default function GlobalError({
       <span className="text-7xl" aria-hidden>
         😵‍💫
       </span>
-      <h1 className="font-bangla text-[length:var(--text-display)]">কিছু একটা ভুল হয়েছে</h1>
+      <h1 className="font-bangla text-display">কিছু একটা ভুল হয়েছে</h1>
       <p className="font-bangla text-muted">
-        চিন্তা নেই, আপনার প্রোগ্রেস নিরাপদ আছে। আবার চেষ্টা করে দেখুন।
+        চিন্তা নেই — আবার চেষ্টা করে দেখুন।
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <Button onClick={reset} tone="ink">

@@ -1,5 +1,5 @@
 /** Study-session helpers shared by every practice mode. */
-import type { ProgressState, WordDetail } from "@/lib/types";
+import type { LearnerState, WordDetail } from "@/lib/types";
 import { buildQueue, weakCards } from "@/lib/storage/srs";
 import { sample, shuffle } from "@/lib/utils";
 
@@ -56,7 +56,7 @@ export const SESSION_SIZE = 12;
 /** Words for a session: SRS-due first, topped up with unseen ones. */
 export function pickSessionWords(
   pool: readonly WordDetail[],
-  state: ProgressState,
+  state: LearnerState,
   size = SESSION_SIZE,
 ): WordDetail[] {
   const byId = new Map(pool.map((w) => [w.id, w]));
@@ -80,7 +80,7 @@ export function pickSessionWords(
 /** Only the words the learner keeps getting wrong. */
 export function pickWeakWords(
   pool: readonly WordDetail[],
-  state: ProgressState,
+  state: LearnerState,
   size = SESSION_SIZE,
 ): WordDetail[] {
   const byId = new Map(pool.map((w) => [w.id, w]));

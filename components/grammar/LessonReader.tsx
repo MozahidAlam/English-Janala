@@ -6,8 +6,8 @@ import { useProgress } from "@/lib/hooks/useProgress";
 import { Button } from "@/components/ui/Button";
 
 /**
- * Marks a lesson as read once it has actually been on screen for a while, so
- * a stray click doesn't award XP. Also renders the manual "done" button.
+ * Marks a lesson as read once it has actually been on screen for a while, so a
+ * stray click doesn't tick it off. Also renders the manual "done" button.
  */
 export function LessonReader({ lesson }: { lesson: GrammarLesson }) {
   const { state, hydrated, finishLesson } = useProgress();
@@ -28,7 +28,7 @@ export function LessonReader({ lesson }: { lesson: GrammarLesson }) {
         <p className="font-bangla text-sm text-muted">
           {isRead
             ? "চাইলে আবার পড়তে পারেন — নিচের কুইজটাও আবার দিতে পারেন।"
-            : "প্রতিটি লেসন শেষ করলে ২০ XP পাবেন।"}
+            : "শেষ করা লেসনগুলো তালিকায় ✅ চিহ্ন পাবে।"}
         </p>
       </div>
       <Button
@@ -36,7 +36,7 @@ export function LessonReader({ lesson }: { lesson: GrammarLesson }) {
         onClick={() => finishLesson(lesson.slug)}
         disabled={isRead}
       >
-        {isRead ? "✅ শেষ" : "✓ পড়া শেষ (+২০ XP)"}
+        {isRead ? "✅ শেষ" : "✓ পড়া শেষ"}
       </Button>
     </div>
   );

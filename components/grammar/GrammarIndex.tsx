@@ -82,7 +82,7 @@ export function GrammarIndex() {
           ) : (
             <ul className="grid gap-3 sm:grid-cols-2">
               {filtered.map((l) => (
-                <LessonRow key={l.slug} lesson={l} isRead={read.has(l.slug)} score={state.lessonScores[l.slug]} />
+                <LessonRow key={l.slug} lesson={l} isRead={read.has(l.slug)} />
               ))}
             </ul>
           )}
@@ -116,7 +116,6 @@ export function GrammarIndex() {
                     key={l.slug}
                     lesson={l}
                     isRead={read.has(l.slug)}
-                    score={state.lessonScores[l.slug]}
                   />
                 ))}
               </ul>
@@ -131,11 +130,9 @@ export function GrammarIndex() {
 function LessonRow({
   lesson,
   isRead,
-  score,
 }: {
   lesson: (typeof GRAMMAR_LESSONS)[number];
   isRead: boolean;
-  score?: number;
 }) {
   return (
     <li>
@@ -156,9 +153,6 @@ function LessonRow({
           <div className="mt-3 flex items-center gap-3 text-xs font-bold text-muted">
             <span>⏱ {toBn(lesson.minutes)} মিনিট</span>
             <span>❓ {toBn(lesson.quiz.length)} প্রশ্ন</span>
-            {typeof score === "number" ? (
-              <span className="text-[color:var(--color-mint)]">🎯 {toBn(score)}%</span>
-            ) : null}
           </div>
         </Card>
       </Link>

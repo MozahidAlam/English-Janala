@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn, readableOn } from "@/lib/utils";
 
 export function Card({
   children,
@@ -20,23 +20,26 @@ export function Card({
   );
 }
 
-/** Small pill label. */
+/**
+ * Small pill label. `tint` takes a tint utility name (see globals.css) rather
+ * than a raw colour so the text colour always travels with the background.
+ */
 export function Chip({
   children,
   className,
-  tone,
+  tint,
 }: {
   children: ReactNode;
   className?: string;
-  tone?: string;
+  tint?: "sky" | "mint" | "amber" | "lemon" | "coral" | "rose" | "violet";
 }) {
   return (
     <span
       className={cn(
         "inline-flex items-center gap-1 rounded-full border-2 border-line px-2.5 py-0.5 text-xs font-bold",
+        tint && `tint-${tint}`,
         className,
       )}
-      style={tone ? { backgroundColor: tone } : undefined}
     >
       {children}
     </span>
@@ -62,12 +65,12 @@ export function SectionHeading({
       {eyebrow ? (
         <span
           className="mb-3 inline-block -rotate-1 rounded-lg border-2 border-line px-3 py-1 text-xs font-extrabold tracking-widest uppercase shadow-(--shadow-hard-sm)"
-          style={{ backgroundColor: accent, color: "#16151d" }}
+          style={{ backgroundColor: accent, color: readableOn(accent) }}
         >
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="text-[length:var(--text-section)]">{title}</h2>
+      <h2 className="text-section">{title}</h2>
       {subtitle ? (
         <p
           className={cn(

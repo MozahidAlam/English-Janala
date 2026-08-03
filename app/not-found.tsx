@@ -6,7 +6,7 @@ export default function NotFound() {
       <span className="anim-drift text-7xl" aria-hidden>
         🧭
       </span>
-      <h1 className="text-[length:var(--text-display)]">৪০৪</h1>
+      <h1 className="text-display">৪০৪</h1>
       <p className="font-bangla text-xl font-bold">এই পাতাটি খুঁজে পাওয়া গেল না</p>
       <p className="font-bangla text-muted">
         হয়তো লিংকটি ভুল, অথবা পাতাটি সরিয়ে ফেলা হয়েছে। চলুন শুরুতে ফিরে যাই।

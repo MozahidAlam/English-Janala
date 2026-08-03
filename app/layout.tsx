@@ -4,7 +4,6 @@ import "./globals.css";
 import { ProgressProvider } from "@/lib/hooks/useProgress";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { BadgeToast } from "@/components/ui/BadgeToast";
 import { ServiceWorker } from "@/components/layout/ServiceWorker";
 
 const bricolage = Bricolage_Grotesque({
@@ -109,7 +108,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </main>
             <Footer />
           </div>
-          <BadgeToast />
           <ServiceWorker />
         </ProgressProvider>
       </body>

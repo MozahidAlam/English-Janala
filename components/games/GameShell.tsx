@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { useProgress } from "@/lib/hooks/useProgress";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Confetti } from "@/components/ui/Confetti";
@@ -38,14 +37,12 @@ export function GameIntro({
   emoji,
   title,
   rules,
-  best,
   onStart,
   color,
 }: {
   emoji: string;
   title: string;
   rules: readonly string[];
-  best?: number;
   onStart: () => void;
   color: string;
 }) {
@@ -67,11 +64,6 @@ export function GameIntro({
           </li>
         ))}
       </ul>
-      {typeof best === "number" && best > 0 ? (
-        <p className="font-bangla text-sm font-bold">
-          🏆 আপনার সেরা স্কোর: {toBn(best)}
-        </p>
-      ) : null}
       <Button size="lg" onClick={onStart} tone="ink" className="w-full">
         ▶️ খেলা শুরু
       </Button>
@@ -81,30 +73,22 @@ export function GameIntro({
 
 export function GameOver({
   score,
-  best,
   detail,
   onRestart,
 }: {
   score: number;
-  best: number;
   detail?: ReactNode;
   onRestart: () => void;
 }) {
-  const isRecord = score >= best && score > 0;
   return (
     <>
-      <Confetti fire={isRecord} />
+      <Confetti fire={score > 0} />
       <Card size="lg" className="mx-auto max-w-lg space-y-5 p-8 text-center">
         <span className="text-6xl" aria-hidden>
-          {isRecord ? "🏆" : score > 0 ? "👏" : "😅"}
+          {score > 0 ? "🎉" : "😅"}
         </span>
-        <h2 className="font-bangla text-3xl">
-          {isRecord ? "নতুন রেকর্ড!" : "খেলা শেষ"}
-        </h2>
+        <h2 className="font-bangla text-3xl">খেলা শেষ</h2>
         <p className="text-5xl font-extrabold">{toBn(score)}</p>
-        <p className="font-bangla text-sm text-muted">
-          আপনার সেরা স্কোর: {toBn(Math.max(best, score))}
-        </p>
         {detail}
         <div className="flex flex-col gap-2 sm:flex-row">
           <Button className="flex-1" onClick={onRestart}>
@@ -170,13 +154,4 @@ function Stat({
       </p>
     </div>
   );
-}
-
-/** Wires the shared score-saving behaviour into any game. */
-export function useGameScore(slug: string) {
-  const { state, saveGameScore } = useProgress();
-  return {
-    best: state.gameScores[slug] ?? 0,
-    save: (score: number) => saveGameScore(slug, score),
-  };
 }

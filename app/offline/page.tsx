@@ -12,10 +12,10 @@ export default function OfflinePage() {
       <span className="anim-drift text-7xl" aria-hidden>
         📡
       </span>
-      <h1 className="font-bangla text-[length:var(--text-display)]">ইন্টারনেট নেই</h1>
+      <h1 className="font-bangla text-display">ইন্টারনেট নেই</h1>
       <p className="font-bangla text-muted">
         এই পাতাটি এখনো ডাউনলোড হয়নি। তবে আগে যেসব পাতা দেখেছেন সেগুলো অফলাইনেও
-        খুলবে — আর আপনার প্রোগ্রেস নিরাপদ আছে।
+        খুলবে।
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <ButtonLink href="/" tone="ink">

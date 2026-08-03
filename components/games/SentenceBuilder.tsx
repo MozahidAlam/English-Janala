@@ -8,12 +8,10 @@ import {
   GameHud,
   GameIntro,
   GameOver,
-  useGameScore,
   type GamePhase,
 } from "@/components/games/GameShell";
 import { cn, toBn } from "@/lib/utils";
 
-const SLUG = "sentence-builder";
 const ROUNDS = 8;
 
 interface Token {
@@ -43,7 +41,6 @@ export function SentenceBuilder() {
   const [built, setBuilt] = useState<Token[]>([]);
   const [score, setScore] = useState(0);
   const [result, setResult] = useState<"none" | "right" | "wrong">("none");
-  const { best, save } = useGameScore(SLUG);
 
   const current = queue[index];
 
@@ -63,10 +60,6 @@ export function SentenceBuilder() {
     setPhase("playing");
   };
 
-  useEffect(() => {
-    if (phase === "over" && score > 0) save(score);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
 
   const pick = (token: Token) => {
     if (result !== "none") return;
@@ -110,7 +103,6 @@ export function SentenceBuilder() {
           "ভুল বসালে আবার ক্লিক করে ফিরিয়ে নিতে পারবেন।",
           `${toBn(ROUNDS)}টি বাক্য। প্রতিটি সঠিক বাক্যে ২৫ পয়েন্ট।`,
         ]}
-        best={best}
         onStart={start}
         color="#1a91ff"
       />
@@ -118,7 +110,7 @@ export function SentenceBuilder() {
   }
 
   if (phase === "over") {
-    return <GameOver score={score} best={best} onRestart={start} />;
+    return <GameOver score={score} onRestart={start} />;
   }
 
   if (!current) return null;
@@ -168,8 +160,7 @@ export function SentenceBuilder() {
           <button
             key={t.id}
             onClick={() => pick(t)}
-            className="brut-sm brut-press px-3.5 py-2.5 font-bold"
-            style={{ backgroundColor: "#cfe9ff" }}
+            className="brut-sm brut-press tint-sky px-3.5 py-2.5 font-bold"
           >
             {t.word}
           </button>

@@ -5,8 +5,7 @@
 মিনি-গেম নিয়ে।
 
 **কোনো ডেটাবেজ নেই। কোনো লগইন নেই। কোনো ব্যাকএন্ড নেই।** পুরো অ্যাপটা স্ট্যাটিক
-হিসেবে বিল্ড হয়, ডেটা আসে ফ্রি পাবলিক API থেকে, আর আপনার প্রোগ্রেস থাকে আপনার
-ব্রাউজারের `localStorage`-এ।
+হিসেবে বিল্ড হয় আর ডেটা আসে ফ্রি পাবলিক API থেকে।
 
 ---
 
@@ -14,12 +13,11 @@
 
 | মডিউল | কী আছে |
 |---|---|
-| **📖 Grammar** | ৮ ক্যাটাগরিতে ৪৩টি লেসন — Parts of Speech, ১২টি Tense, Voice, Narration, Article, Preposition, Conditional, Clause, Punctuation, Common Mistakes। প্রতিটিতে বাংলায় নিয়ম, সূত্র, ভুল-ঠিক কার্ড, মনে রাখার কৌশল ও কুইজ |
+| **📖 Grammar** | ৮ ক্যাটাগরিতে ৪৩টি লেসন (Transformation সহ সম্পূর্ণ সিলেবাস) — Parts of Speech, ১২টি Tense, Voice, Narration, Article, Preposition, Conditional, Clause, Punctuation, Common Mistakes। প্রতিটিতে বাংলায় নিয়ম, সূত্র, ভুল-ঠিক কার্ড, মনে রাখার কৌশল ও কুইজ |
 | **📚 Vocabulary** | লেসনভিত্তিক শব্দ, বাংলা অর্থ ও উচ্চারণ, English definition, IPA, synonym, antonym, collocation, উদাহরণ বাক্য, আসল মানুষের কণ্ঠে অডিও |
 | **🧠 Flashcards** | Leitner box Spaced Repetition + ৫টি মোড: ফ্ল্যাশকার্ড, অর্থ বাছাই, উল্টো খেলা, শুনে বলুন, বানান লিখুন |
 | **🔎 Grammar Guru** | LanguageTool দিয়ে রিয়েল গ্রামার ও বানান চেকার — ভুল, কারণ, সাজেশন আর এক ক্লিকে সংশোধন |
 | **🎮 Games** | Spot the Error, Sentence Builder, Word Match, Hangman, Boss Battle |
-| **📊 Progress** | XP, র‍্যাঙ্ক, স্ট্রিক, ১৮টি ব্যাজ, ৯১ দিনের হিটম্যাপ, SRS box distribution, ডেইলি গোল, ব্যাকআপ Export/Import |
 | **⚙️ Platform** | PWA (অফলাইনে চলে), ডার্ক মোড, সম্পূর্ণ কীবোর্ড-অ্যাক্সেসিবল, SEO + sitemap + JSON-LD, OG share card |
 
 ---
@@ -88,18 +86,18 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 app/                     রুট ও পেজ (App Router)
   grammar/[slug]/        ৪৩টি লেসন পেজ (SSG)
   games/[slug]/          ৫টি গেম পেজ (SSG)
-  vocabulary/ flashcards/ guru/ dashboard/
+  vocabulary/ flashcards/ guru/
   sitemap.ts robots.ts manifest.ts opengraph-image.tsx
 
 components/
   layout/   Header, Footer, ThemeToggle, ServiceWorker
   ui/       Button, Card, Modal, ProgressBar, Confetti, Skeleton…
-  home/ vocab/ study/ grammar/ guru/ games/ progress/
+  home/ vocab/ study/ grammar/ guru/ games/
 
 lib/
   api/      vocabulary.ts, dictionary.ts, languagetool.ts
   content/  grammar/ (৮টি ক্যাটাগরি ফাইল), games.ts, nav.ts
-  storage/  progress.ts, srs.ts, badges.ts   ← localStorage ইঞ্জিন
+  storage/  progress.ts, srs.ts               ← localStorage ইঞ্জিন
   study/    session.ts                        ← কুইজ/সেশন লজিক
   hooks/    useProgress.tsx, useSpeech.ts
   data/     vocabulary.json                   ← অফলাইন স্ন্যাপশট
@@ -146,9 +144,9 @@ node scripts/build-fallback.mjs
 
 ## 🔐 প্রাইভেসি
 
-কোনো অ্যাকাউন্ট নেই, কোনো কুকি নেই, কোনো অ্যানালিটিক্স নেই। আপনার XP, স্ট্রিক,
-ব্যাজ আর শেখা শব্দ শুধু আপনার ব্রাউজারে থাকে। Grammar Guru-তে লেখা টেক্সট
-LanguageTool-এ পাঠানো হয় চেক করার জন্য, কিন্তু কোথাও সংরক্ষণ করা হয় না।
+কোনো অ্যাকাউন্ট নেই, কোনো কুকি নেই, কোনো অ্যানালিটিক্স নেই, কোনো স্কোরবোর্ড নেই।
 
-অন্য ডিভাইসে প্রোগ্রেস নিতে চাইলে **Progress → 💾 আপনার ডেটা → প্রোগ্রেস ব্যাকআপ**
-থেকে ফাইল নামিয়ে সেখানে ইমপোর্ট করুন।
+ব্রাউজারে শুধু তিনটি জিনিস রাখা হয়, একেবারেই শেখার কাজে —
+ফ্ল্যাশকার্ডের রিভিশন সূচি (SRS), সেভ করা শব্দ, আর কোন লেসনগুলো পড়া হয়েছে।
+Grammar Guru-তে লেখা টেক্সট LanguageTool-এ পাঠানো হয় চেক করার জন্য, কিন্তু কোথাও
+সংরক্ষণ করা হয় না।

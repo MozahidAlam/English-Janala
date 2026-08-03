@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Word, WordDetail as Detail, WordEnrichment } from "@/lib/types";
-import { getWordDetail } from "@/lib/api/vocabulary";
-import { enrichWord } from "@/lib/api/dictionary";
+import { getWordDetail, snapshotDetail } from "@/lib/api/vocabulary";
+import { cachedEnrichment, enrichWord } from "@/lib/api/dictionary";
 import { useSpeech } from "@/lib/hooks/useSpeech";
 import { useProgress } from "@/lib/hooks/useProgress";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -16,27 +16,31 @@ import { Chip } from "@/components/ui/Card";
  * simply hides its section rather than blocking the panel.
  */
 export function WordDetail({ word }: { word: Word }) {
-  const [detail, setDetail] = useState<Detail | null>(null);
-  const [rich, setRich] = useState<WordEnrichment | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Seed from the bundled snapshot and any cached enrichment so the panel has
+  // real content on the very first frame; the network only ever upgrades it.
+  const [detail, setDetail] = useState<Detail | null>(() => snapshotDetail(word.id));
+  const [rich, setRich] = useState<WordEnrichment | null>(() =>
+    cachedEnrichment(word.word),
+  );
+  const [loading, setLoading] = useState(() => cachedEnrichment(word.word) === null);
   const { speak, speaking } = useSpeech();
   const { state, toggleBookmark } = useProgress();
   const bookmarked = state.bookmarks.includes(word.id);
 
   useEffect(() => {
     let alive = true;
-    setLoading(true);
-    setDetail(null);
-    setRich(null);
+    const seededRich = cachedEnrichment(word.word);
+    setDetail(snapshotDetail(word.id));
+    setRich(seededRich);
+    setLoading(seededRich === null);
 
     void getWordDetail(word.id).then((d) => {
-      if (alive) {
-        setDetail(d);
-        setLoading(false);
-      }
+      if (alive && d) setDetail(d);
     });
     void enrichWord(word.word).then((r) => {
-      if (alive) setRich(r);
+      if (!alive) return;
+      setRich(r);
+      setLoading(false);
     });
 
     return () => {
@@ -101,7 +105,7 @@ export function WordDetail({ word }: { word: Word }) {
           <p className="italic">“{detail.sentence}”</p>
           <button
             onClick={() => speak(detail.sentence!)}
-            className="mt-2 text-xs font-bold text-[color:var(--color-sky)] hover:underline"
+            className="mt-2 text-xs font-bold text-sky hover:underline"
           >
             🔊 বাক্যটি শুনুন
           </button>
@@ -142,7 +146,7 @@ export function WordDetail({ word }: { word: Word }) {
         <Field label="Antonyms">
           <div className="flex flex-wrap gap-2">
             {rich.antonyms.map((s) => (
-              <Chip key={s} tone="#ffd6d6">
+              <Chip key={s} tint="rose">
                 {s}
               </Chip>
             ))}
@@ -154,7 +158,7 @@ export function WordDetail({ word }: { word: Word }) {
         <Field label="সাধারণত যেসব শব্দের সাথে বসে">
           <div className="flex flex-wrap gap-2">
             {rich.collocations.map((s) => (
-              <Chip key={s} tone="#d7f7ec">
+              <Chip key={s} tint="mint">
                 {word.word.toLowerCase()} {s}
               </Chip>
             ))}

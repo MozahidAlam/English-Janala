@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Lesson, Word } from "@/lib/types";
-import { getAllWords, getLessons, getWordsByLevel } from "@/lib/api/vocabulary";
-import { enrichWord } from "@/lib/api/dictionary";
+import {
+  getAllWords,
+  getLessons,
+  getWordsByLevel,
+  snapshotLevel,
+} from "@/lib/api/vocabulary";
+import { cachedEnrichment, enrichWord } from "@/lib/api/dictionary";
 import { useSpeech } from "@/lib/hooks/useSpeech";
 import { useProgress } from "@/lib/hooks/useProgress";
 import { WordCard } from "@/components/vocab/WordCard";
@@ -38,7 +43,7 @@ export function VocabularyExplorer({
   const [active, setActive] = useState<Word | null>(null);
 
   const { speak, speaking } = useSpeech();
-  const { state, toggleBookmark, addXp } = useProgress();
+  const { state, toggleBookmark } = useProgress();
 
   // Tracks the view the user is actually looking at, so a late-arriving fetch
   // never overwrites a grid they have already navigated away from.
@@ -56,16 +61,19 @@ export function VocabularyExplorer({
     });
   }, [firstLevel]);
 
-  const showLevel = useCallback(
-    async (level: number) => {
-      setLoading(true);
-      setView({ kind: "level", level });
-      const list = await getWordsByLevel(level);
-      setWords(list);
-      setLoading(false);
-    },
-    [],
-  );
+  const showLevel = useCallback(async (level: number) => {
+    // Paint the bundled snapshot immediately — switching lessons should feel
+    // instant, with the live list quietly replacing it a moment later.
+    const snapshot = snapshotLevel(level);
+    setView({ kind: "level", level });
+    setWords(snapshot);
+    setLoading(snapshot.length === 0);
+
+    const list = await getWordsByLevel(level);
+    const v = viewRef.current;
+    if (v.kind === "level" && v.level === level) setWords(list);
+    setLoading(false);
+  }, []);
 
   const runSearch = useCallback(async () => {
     const q = query.trim().toLowerCase();
@@ -94,17 +102,21 @@ export function VocabularyExplorer({
   const openWord = useCallback(
     (word: Word) => {
       setActive(word);
-      addXp({ xp: 2 });
       // Warm the dictionary cache so the panel usually renders instantly.
       void enrichWord(word.word);
     },
-    [addXp],
+    [],
   );
 
+  /**
+   * Play immediately. If the recording is already cached use it; otherwise fall
+   * back to the synthesiser now rather than making the user wait on a fetch.
+   */
   const handleSpeak = useCallback(
-    async (word: Word) => {
-      const rich = await enrichWord(word.word);
-      speak(word.word, rich.audioUrl);
+    (word: Word) => {
+      const rich = cachedEnrichment(word.word);
+      speak(word.word, rich?.audioUrl ?? null);
+      if (!rich) void enrichWord(word.word);
     },
     [speak],
   );
@@ -235,7 +247,7 @@ export function VocabularyExplorer({
               key={w.id}
               word={w}
               onOpen={openWord}
-              onSpeak={(word) => void handleSpeak(word)}
+              onSpeak={handleSpeak}
               bookmarked={state.bookmarks.includes(w.id)}
               onBookmark={toggleBookmark}
               speaking={speaking}

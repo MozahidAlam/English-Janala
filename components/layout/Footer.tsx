@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { NAV } from "@/lib/content/nav";
+import { AUTHOR } from "@/lib/content/author";
 
 const SOURCES = [
   { name: "Programming Hero API", href: "https://openapi.programming-hero.com" },
@@ -19,7 +20,7 @@ export function Footer() {
           </p>
           <p className="font-bangla mt-3 max-w-xs text-sm text-muted">
             মজা করে English Grammar আর Vocabulary শেখার জায়গা। কোনো লগইন লাগে না,
-            আপনার প্রোগ্রেস আপনার ব্রাউজারেই থাকে।
+            কোনো বিজ্ঞাপন নেই, কোনো ফি নেই।
           </p>
         </div>
 
@@ -61,7 +62,9 @@ export function Footer() {
 
       <div className="border-t-2 border-line px-4 py-5 text-center text-xs text-muted sm:px-6">
         <p className="font-bangla">
-          ❤️ দিয়ে তৈরি — বাংলাভাষীদের ইংরেজি শেখার জন্য। ডেটা ১০০% আপনার ডিভাইসে।
+          ❤️ দিয়ে তৈরি করেছেন{" "}
+          <strong className="text-(--fg)">{AUTHOR.name}</strong> —{" "}
+          {AUTHOR.affiliation}
         </p>
       </div>
     </footer>

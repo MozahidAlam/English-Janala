@@ -4,7 +4,7 @@ import { SectionHeading, Card } from "@/components/ui/Card";
 import { ButtonLink } from "@/components/ui/Button";
 import { CATEGORIES, GRAMMAR_LESSONS, lessonsInCategory, TOTAL_LESSONS } from "@/lib/content/grammar";
 import { snapshotWords } from "@/lib/api/vocabulary";
-import { accentColor, toBn } from "@/lib/utils";
+import { accentColor, readableOn, toBn } from "@/lib/utils";
 
 const FEATURES = [
   {
@@ -41,10 +41,12 @@ const FEATURES = [
   },
 ];
 
+const STEP_COLORS = ["#ffb020", "#1a91ff", "#e94ea8"] as const;
+
 const HOW = [
   { n: "১", t: "বেছে নিন", d: "গ্রামার লেসন, ভোকাবুলারি বা গেম — যেটা ভালো লাগে।" },
   { n: "২", t: "চর্চা করুন", d: "প্রতিটি লেসনের শেষে কুইজ, প্রতিটি শব্দে ফ্ল্যাশকার্ড।" },
-  { n: "৩", t: "স্ট্রিক বানান", d: "প্রতিদিন একটু — XP জমান, ব্যাজ জিতুন, অভ্যাস গড়ুন।" },
+  { n: "৩", t: "অভ্যাস গড়ুন", d: "প্রতিদিন একটু — ফ্ল্যাশকার্ড নিজেই মনে করিয়ে দেবে কোনটা রিভিশন দরকার।" },
 ];
 
 export default function HomePage() {
@@ -110,7 +112,10 @@ export default function HomePage() {
                       </span>
                       <span
                         className="rounded-full border-2 border-line px-2.5 py-0.5 text-xs font-extrabold"
-                        style={{ backgroundColor: accentColor(cat.accent), color: "#16151d" }}
+                        style={{
+                          backgroundColor: accentColor(cat.accent),
+                          color: readableOn(accentColor(cat.accent)),
+                        }}
                       >
                         {toBn(count)}টি
                       </span>
@@ -147,7 +152,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-bangla text-2xl">{l.titleBn}</h3>
                 <p className="font-bangla mt-2 text-sm text-muted">{l.hook}</p>
-                <p className="mt-4 text-sm font-extrabold text-[color:var(--color-sky)]">
+                <p className="mt-4 text-sm font-extrabold text-sky">
                   পড়া শুরু করুন →
                 </p>
               </Card>
@@ -170,7 +175,10 @@ export default function HomePage() {
               <Card key={s.n} className="relative p-6 pt-10">
                 <span
                   className="font-bangla absolute -top-5 left-5 flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-line text-2xl font-extrabold shadow-(--shadow-hard-sm)"
-                  style={{ backgroundColor: ["#ffb020", "#1a91ff", "#e94ea8"][i] }}
+                  style={{
+                    backgroundColor: STEP_COLORS[i],
+                    color: readableOn(STEP_COLORS[i]!),
+                  }}
                 >
                   {s.n}
                 </span>
@@ -181,7 +189,7 @@ export default function HomePage() {
           </div>
 
           <div className="brut-lg mt-12 flex flex-col items-center gap-5 p-8 text-center sm:p-12">
-            <h2 className="text-[length:var(--text-display)]">
+            <h2 className="text-display">
               আজই <span className="marker">প্রথম লেসন</span> শেষ করুন
             </h2>
             <p className="font-bangla max-w-xl text-muted">

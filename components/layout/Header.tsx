@@ -5,16 +5,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV } from "@/lib/content/nav";
-import { useProgress } from "@/lib/hooks/useProgress";
-import { liveStreak } from "@/lib/storage/progress";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { cn, toBn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { state, hydrated } = useProgress();
-  const streak = hydrated ? liveStreak(state) : 0;
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -62,19 +58,6 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-2">
-          {hydrated && state.xp > 0 ? (
-            <div className="brut-sm hidden items-center gap-2.5 px-3 py-1.5 text-sm font-extrabold sm:flex">
-              <span title="মোট XP">⚡ {toBn(state.xp)}</span>
-              <span className="h-4 w-0.5 bg-line-soft" aria-hidden />
-              <span title="স্ট্রিক" className={streak > 0 ? "" : "opacity-40"}>
-                <span className={cn("inline-block", streak > 0 && "anim-flame")} aria-hidden>
-                  🔥
-                </span>{" "}
-                {toBn(streak)}
-              </span>
-            </div>
-          ) : null}
-
           <ThemeToggle compact />
 
           <button

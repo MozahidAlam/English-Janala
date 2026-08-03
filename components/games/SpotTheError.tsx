@@ -9,12 +9,10 @@ import {
   GameIntro,
   GameOver,
   useCountdown,
-  useGameScore,
   type GamePhase,
 } from "@/components/games/GameShell";
 import { cn } from "@/lib/utils";
 
-const SLUG = "spot-the-error";
 const DURATION = 60;
 
 interface Round {
@@ -43,16 +41,10 @@ export function SpotTheError() {
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const { best, save } = useGameScore(SLUG);
 
   const end = useCallback(() => setPhase("over"), []);
   const timeLeft = useCountdown(DURATION, phase === "playing", end);
 
-  useEffect(() => {
-    if (phase === "over" && score > 0) save(score);
-    // save is stable per render of the provider; run once when the game ends.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
 
   const start = () => {
     setRounds(buildRounds());
@@ -99,7 +91,6 @@ export function SpotTheError() {
         emoji="🔍"
         title="ভুল ধরুন"
         rules={rules}
-        best={best}
         onStart={start}
         color="#ff5d5d"
       />
@@ -107,7 +98,7 @@ export function SpotTheError() {
   }
 
   if (phase === "over") {
-    return <GameOver score={score} best={best} onRestart={start} />;
+    return <GameOver score={score} onRestart={start} />;
   }
 
   if (!round) return null;
@@ -147,9 +138,7 @@ export function SpotTheError() {
 
       {picked !== null ? (
         <div
-          className="brut anim-pop mt-4 p-4"
-          style={{ backgroundColor: "#fff0c2" }}
-        >
+          className="brut anim-pop tint-lemon mt-4 p-4">
           <p className="font-bangla text-sm text-ink">
             <strong>কেন:</strong> {round.why}
           </p>

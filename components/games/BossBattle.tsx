@@ -9,12 +9,10 @@ import {
   GameIntro,
   GameOver,
   useCountdown,
-  useGameScore,
   type GamePhase,
 } from "@/components/games/GameShell";
 import { cn } from "@/lib/utils";
 
-const SLUG = "boss-battle";
 const LIVES = 3;
 const PER_QUESTION = 20;
 
@@ -28,7 +26,6 @@ export function BossBattle() {
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const { best, save } = useGameScore(SLUG);
 
   const question = queue[index];
 
@@ -52,10 +49,6 @@ export function BossBattle() {
     loseLife,
   );
 
-  useEffect(() => {
-    if (phase === "over" && score > 0) save(score);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
 
   // Ran out of questions — that counts as clearing the boss.
   useEffect(() => {
@@ -112,7 +105,6 @@ export function BossBattle() {
           `${toBn(LIVES)}টি লাইফ — ভুল বা সময় শেষ হলে একটি করে যাবে।`,
           "টানা সঠিক উত্তরে কম্বো বোনাস, দ্রুত উত্তরে সময় বোনাস।",
         ]}
-        best={best}
         onStart={start}
         color="#7c5cff"
       />
@@ -123,7 +115,6 @@ export function BossBattle() {
     return (
       <GameOver
         score={score}
-        best={best}
         onRestart={start}
         detail={
           <p className="font-bangla text-sm text-muted">
@@ -173,8 +164,10 @@ export function BossBattle() {
 
       {answered ? (
         <div
-          className="brut anim-pop mt-4 p-4"
-          style={{ backgroundColor: picked === question.answer ? "#d7f7ec" : "#ffe0e0" }}
+          className={cn(
+            "brut anim-pop mt-4 p-4",
+            picked === question.answer ? "tint-mint" : "tint-coral",
+          )}
         >
           <p className="font-bangla text-sm text-ink">{question.explain}</p>
           <Link

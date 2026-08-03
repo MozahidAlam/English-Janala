@@ -11,7 +11,9 @@ import snapshot from "@/lib/data/vocabulary.json";
 import type { Lesson, Word, WordDetail } from "@/lib/types";
 
 const BASE = "https://openapi.programming-hero.com/api";
-const TIMEOUT_MS = 12_000;
+// Short on purpose: every call has a bundled snapshot to fall back to, so it is
+// better to show the snapshot fast than to stall the UI waiting on the network.
+const TIMEOUT_MS = 5_000;
 
 interface SnapshotWord {
   id: number;
@@ -33,6 +35,8 @@ const SNAP = snapshot as {
 
 /** In-memory memo so repeated navigations don't refetch. */
 const memo = new Map<string, unknown>();
+/** De-dupes concurrent requests for the same key. */
+const inFlight = new Map<string, Promise<unknown>>();
 
 async function getJson<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -49,15 +53,34 @@ async function getJson<T>(path: string): Promise<T> {
 async function cached<T>(key: string, load: () => Promise<T>, fallback: T): Promise<T> {
   const hit = memo.get(key);
   if (hit !== undefined) return hit as T;
-  try {
-    const value = await load();
-    memo.set(key, value);
-    return value;
-  } catch {
-    // Upstream unavailable — serve the bundled snapshot rather than failing.
-    memo.set(key, fallback);
-    return fallback;
-  }
+
+  const pending = inFlight.get(key);
+  if (pending) return pending as Promise<T>;
+
+  const task = load()
+    .then((value) => {
+      memo.set(key, value);
+      return value;
+    })
+    .catch(() => {
+      // Upstream unavailable — serve the bundled snapshot rather than failing.
+      memo.set(key, fallback);
+      return fallback;
+    })
+    .finally(() => inFlight.delete(key));
+
+  inFlight.set(key, task);
+  return task;
+}
+
+/** True when a value is already in memory, so callers can skip a loading state. */
+export function isCached(key: string): boolean {
+  return memo.has(key);
+}
+
+/** Snapshot words for one level — synchronous, for instant first paint. */
+export function snapshotLevel(levelNo: number): readonly Word[] {
+  return SNAP.words.filter((w) => w.level === levelNo).map(toWord);
 }
 
 function toWord(raw: SnapshotWord | Record<string, unknown>): Word {

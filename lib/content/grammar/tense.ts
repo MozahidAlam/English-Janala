@@ -596,21 +596,41 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
     hook: "‘সে দুই ঘণ্টা ধরে অপেক্ষা করছিল, তারপর চলে গেল’ — অতীতেও কিছু কাজ ধরে ধরে চলত।",
     rule: "অতীতে কোনো নির্দিষ্ট সময়ের আগে থেকে চলছিল এমন কাজ, যার সময়কাল উল্লেখ থাকে, তা বোঝাতে Past Perfect Continuous ব্যবহৃত হয়।",
     points: [
-      "গঠন: had been + V-ing",
-      "সময়কাল উল্লেখ থাকে: for two hours, since morning",
-      "Past Perfect শেষ হওয়া বোঝায়; এটি সেই সময় পর্যন্ত চলমানতা বোঝায়",
+      "গঠন: had been + V-ing (সব person-এর জন্য একই — has/have নেই)",
+      "সময়কাল সাধারণত উল্লেখ থাকে: for two hours, since morning",
+      "Past Perfect শেষ হওয়া বোঝায়; এটি সেই সময় পর্যন্ত চলমান থাকা বোঝায়",
+      "অতীতের কোনো অবস্থার কারণ ব্যাখ্যা করতেও ব্যবহৃত হয়: His eyes were red — he had been crying.",
+      "State Verb (know, love, believe, want) এই Tense-এ বসে না",
+      "সঙ্গী শব্দ: before, when, for, since, all day, all night",
     ],
     formulas: [
       {
-        label: "গঠন",
-        formula: "S + had been + V-ing + for/since … + before + S + V2",
+        label: "Affirmative",
+        formula: "S + had been + V-ing + for/since + সময় + before + S + V2",
         example: "He had been waiting for an hour before she came.",
+      },
+      {
+        label: "Negative",
+        formula: "S + had not been + V-ing",
+        example: "She had not been feeling well.",
+      },
+      {
+        label: "Interrogative",
+        formula: "Had + S + been + V-ing?",
+        example: "Had they been living there long?",
+      },
+      {
+        label: "কারণ ব্যাখ্যা",
+        formula: "S + V2 + because + S + had been + V-ing",
+        example: "He was tired because he had been working all day.",
       },
     ],
     examples: [
       "She had been teaching for ten years before she retired.",
       "It had been raining since morning when we started.",
       "They had been living in Dhaka for five years before moving to Khulna.",
+      "The ground was wet because it had been raining.",
+      "Had you been waiting long when the train arrived?",
     ],
     wrongRight: [
       {
@@ -623,9 +643,19 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         right: "She had been working there.",
         why: "'being' নয়, 'been' বসবে।",
       },
+      {
+        wrong: "They had been knowing each other for years.",
+        right: "They had known each other for years.",
+        why: "know একটি State Verb — এর Continuous রূপ হয় না, তাই Past Perfect।",
+      },
+      {
+        wrong: "He has been working there before he resigned.",
+        right: "He had been working there before he resigned.",
+        why: "পুরো ঘটনাই অতীতে — তাই has নয়, had বসবে।",
+      },
     ],
     trick:
-      "Present Perfect Continuous-এর **have/has** কে **had** বানিয়ে দিলেই Past Perfect Continuous। এক অক্ষরের পার্থক্য।",
+      "Present Perfect Continuous-এর **have/has** কে **had** বানিয়ে দিলেই Past Perfect Continuous — এক শব্দের পার্থক্য। আর ‘had been’ কখনো ‘had being’ হয় না।",
     quiz: [
       {
         q: "‘They ___ for hours before the bus finally arrived.’",
@@ -634,13 +664,25 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         explain: "অতীতের একটি বিন্দুর আগে থেকে চলছিল + সময়কাল।",
       },
       {
-        q: "কোনটি সঠিক গঠন?",
+        q: "সঠিক গঠন কোনটি?",
         options: ["had being + V-ing", "had been + V-ing", "has been + V-ing", "had been + V3"],
         answer: 1,
         explain: "had been + V-ing।",
       },
+      {
+        q: "‘His clothes were muddy because he ___ football.’",
+        options: ["played", "has been playing", "had been playing", "was play"],
+        answer: 2,
+        explain: "অতীতের অবস্থার কারণ ব্যাখ্যা — had been + V-ing।",
+      },
+      {
+        q: "‘She ___ in that company for six years before she quit.’",
+        options: ["had been working", "has been working", "was working", "worked"],
+        answer: 0,
+        explain: "before-এর আগের চলমান কাজ + সময়কাল।",
+      },
     ],
-    minutes: 5,
+    minutes: 6,
   },
   {
     slug: "future-simple",
@@ -721,32 +763,55 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
     hook: "‘কাল এই সময়ে আমি প্লেনে বসে থাকব’ — ভবিষ্যতের একটা নির্দিষ্ট মুহূর্তে কাজটা চলতে থাকবে।",
     rule: "ভবিষ্যতে কোনো নির্দিষ্ট সময়ে কাজটি চলমান থাকবে বোঝাতে Future Continuous ব্যবহৃত হয়।",
     points: [
-      "গঠন: will be + V-ing",
-      "Time expression: this time tomorrow, at 8 pm tomorrow",
-      "ভদ্রভাবে পরিকল্পনা জানতে চাইতেও ব্যবহৃত হয়: Will you be using the car tonight?",
+      "গঠন: will be + V-ing (সব person-এর জন্য একই)",
+      "ভবিষ্যতের নির্দিষ্ট মুহূর্তে কাজটি চলতে থাকবে বোঝায়",
+      "Time expression: this time tomorrow, at 8 pm tomorrow, when you arrive, all day tomorrow",
+      "ভদ্রভাবে কারো পরিকল্পনা জানতে চাইতেও ব্যবহৃত হয়: Will you be using the car tonight?",
+      "স্বাভাবিকভাবে ঘটবে এমন কাজ বোঝাতেও ব্যবহৃত হয়: He will be coming to office as usual.",
+      "State Verb এই Tense-এ বসে না — I will be knowing ❌",
+      "shall be + V-ing শুধু I/we-এর সাথে আনুষ্ঠানিক লেখায় চলে",
     ],
     formulas: [
-      { label: "গঠন", formula: "S + will be + V-ing", example: "I will be sleeping at midnight." },
-      { label: "Negative", formula: "S + will not be + V-ing", example: "He will not be coming." },
+      { label: "Affirmative", formula: "S + will be + V-ing", example: "I will be sleeping at midnight." },
+      { label: "Negative", formula: "S + will not (won't) be + V-ing", example: "He will not be coming." },
+      { label: "Interrogative", formula: "Will + S + be + V-ing?", example: "Will you be waiting for me?" },
+      {
+        label: "when-clause সহ",
+        formula: "When + S + Present Simple, S + will be + V-ing",
+        example: "When you arrive, I will be cooking dinner.",
+      },
     ],
     examples: [
       "This time tomorrow I will be flying to Dubai.",
       "She will be waiting for you at the station.",
       "They will not be attending the seminar.",
+      "Will you be using the printer this afternoon?",
+      "When the guests come, we will be having lunch.",
     ],
     wrongRight: [
       {
         wrong: "I will be go there tomorrow.",
         right: "I will be going there tomorrow.",
-        why: "will be-এর পরে V-ing বসবে।",
+        why: "will be-এর পরে অবশ্যই V-ing বসবে।",
       },
       {
         wrong: "This time tomorrow I will sleep.",
         right: "This time tomorrow I will be sleeping.",
         why: "ভবিষ্যতের নির্দিষ্ট মুহূর্তে চলমানতা — Future Continuous।",
       },
+      {
+        wrong: "When you will come, I will be cooking.",
+        right: "When you come, I will be cooking.",
+        why: "time clause-এ 'will' বসে না, Present Simple বসে।",
+      },
+      {
+        wrong: "I will be knowing the result by then.",
+        right: "I will know the result by then.",
+        why: "know একটি State Verb — এর Continuous রূপ হয় না।",
+      },
     ],
-    trick: "**will be + ing** — এই তিন টুকরো একসাথে না থাকলে Future Continuous হয় না।",
+    trick:
+      "**will + be + ing** — এই তিন টুকরো একসাথে না থাকলে Future Continuous হয় না। আর ‘this time tomorrow’ দেখলেই এই Tense।",
     quiz: [
       {
         q: "‘At 9 pm tomorrow, we ___ dinner.’",
@@ -760,8 +825,20 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         answer: 1,
         explain: "will be + V-ing।",
       },
+      {
+        q: "‘When you ___ home, I will be studying.’",
+        options: ["will reach", "reach", "reached", "will be reaching"],
+        answer: 1,
+        explain: "time clause-এ Present Simple বসে।",
+      },
+      {
+        q: "‘This time next week they ___ in Cox's Bazar.’",
+        options: ["will stay", "stay", "will be staying", "are staying"],
+        answer: 2,
+        explain: "‘this time next week’ = ভবিষ্যতের নির্দিষ্ট মুহূর্ত, কাজ চলমান থাকবে।",
+      },
     ],
-    minutes: 5,
+    minutes: 6,
   },
   {
     slug: "future-perfect",
@@ -771,22 +848,35 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
     hook: "‘আগামী ডিসেম্বরের মধ্যে আমি বইটা শেষ করে ফেলব’ — ভবিষ্যতের একটা ডেডলাইনের আগেই কাজ শেষ।",
     rule: "ভবিষ্যতে কোনো নির্দিষ্ট সময়ের মধ্যে বা তার আগেই কাজটি সম্পন্ন হয়ে যাবে বোঝাতে Future Perfect ব্যবহৃত হয়।",
     points: [
-      "গঠন: will have + V3",
-      "সঙ্গী শব্দ: by + সময় (by tomorrow, by next year, by the time)",
-      "'by the time'-এর পরে Present Simple বসে",
+      "গঠন: will have + V3 (সব person-এর জন্য একই)",
+      "ভবিষ্যতের কোনো নির্দিষ্ট সময়ের মধ্যে বা তার আগেই কাজ শেষ হয়ে যাবে বোঝায়",
+      "সঙ্গী শব্দ: by + সময় (by tomorrow, by next year, by 2030), by the time, before",
+      "'by the time'-এর পরে Present Simple বসে, কখনো will নয়",
+      "বর্তমান সম্পর্কে দৃঢ় অনুমান বোঝাতেও ব্যবহৃত হয়: They will have reached home by now.",
+      "Negative-এ 'will not have + V3', Interrogative-এ 'Will + S + have + V3?'",
+      "‘by’ মানে ওই সময়ের মধ্যেই, আর ‘until’ মানে ওই সময় পর্যন্ত — দুটো এক নয়",
     ],
     formulas: [
-      { label: "গঠন", formula: "S + will have + V3 + by + time", example: "I will have finished by 6 pm." },
+      { label: "Affirmative", formula: "S + will have + V3 + by + সময়", example: "I will have finished by 6 pm." },
+      { label: "Negative", formula: "S + will not have + V3", example: "She will not have arrived yet." },
+      { label: "Interrogative", formula: "Will + S + have + V3?", example: "Will you have finished by then?" },
       {
         label: "by the time",
         formula: "By the time + S + V1(s), S + will have + V3",
         example: "By the time you arrive, I will have left.",
+      },
+      {
+        label: "বর্তমানের অনুমান",
+        formula: "S + will have + V3 + by now",
+        example: "He will have reached Dhaka by now.",
       },
     ],
     examples: [
       "By next month, she will have completed her course.",
       "They will have reached home by now.",
       "By the time he comes, we will have finished dinner.",
+      "I will not have read the whole book by Friday.",
+      "Will they have announced the result by Sunday?",
     ],
     wrongRight: [
       {
@@ -797,10 +887,21 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
       {
         wrong: "By the time he will come, I will have left.",
         right: "By the time he comes, I will have left.",
-        why: "'by the time' একটি time clause — সেখানে Present Simple।",
+        why: "'by the time' একটি time clause — সেখানে Present Simple বসে।",
+      },
+      {
+        wrong: "She will have went home by then.",
+        right: "She will have gone home by then.",
+        why: "will have-এর পরে V3 — go-এর V3 হলো 'gone'।",
+      },
+      {
+        wrong: "I will have finished the work until 5 pm.",
+        right: "I will have finished the work by 5 pm.",
+        why: "নির্দিষ্ট সময়ের 'মধ্যে' বোঝাতে 'by', 'until' নয়।",
       },
     ],
-    trick: "**‘by + সময়’ দেখলেই will have + V3** — প্রায় নির্ভুল একটা সিগন্যাল।",
+    trick:
+      "**‘by + সময়’ দেখলেই will have + V3** — প্রায় নির্ভুল একটা সিগন্যাল। আর ‘by the time’-এর ঘরে will ঢোকা নিষেধ।",
     quiz: [
       {
         q: "‘By 2030, technology ___ everything.’",
@@ -814,8 +915,25 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         answer: 1,
         explain: "'by the time' time clause — Present Simple।",
       },
+      {
+        q: "‘He ___ the letter by tomorrow evening.’",
+        options: ["will write", "will have written", "will be writing", "writes"],
+        answer: 1,
+        explain: "by + ভবিষ্যৎ সময়ে কাজ শেষ হবে — will have + V3।",
+      },
+      {
+        q: "কোনটি সঠিক?",
+        options: [
+          "They will have arrive by now.",
+          "They will have arrived by now.",
+          "They will has arrived by now.",
+          "They will have arriving by now.",
+        ],
+        answer: 1,
+        explain: "will have + V3।",
+      },
     ],
-    minutes: 5,
+    minutes: 6,
   },
   {
     slug: "future-perfect-continuous",
@@ -825,20 +943,36 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
     hook: "সবচেয়ে লম্বা নাম, কিন্তু সবচেয়ে কম ব্যবহৃত। পরীক্ষায় আসে, বাস্তবে খুব কম।",
     rule: "ভবিষ্যতে কোনো নির্দিষ্ট সময় পর্যন্ত কাজটি চলতে থাকবে এবং তার সময়কাল উল্লেখ থাকবে — এমন ক্ষেত্রে Future Perfect Continuous ব্যবহৃত হয়।",
     points: [
-      "গঠন: will have been + V-ing",
-      "সময়কাল অবশ্যই থাকে: for five years, for two hours",
-      "প্রায় সবসময় 'by + সময়' + 'for + সময়কাল' একসাথে থাকে",
+      "গঠন: will have been + V-ing (সব person-এর জন্য একই)",
+      "ভবিষ্যতের কোনো নির্দিষ্ট সময় পর্যন্ত কাজটি একটানা চলতে থাকবে বোঝায়",
+      "সময়কাল প্রায় সবসময় থাকে: for five years, for two hours",
+      "সাধারণত 'by + সময়' এবং 'for + সময়কাল' একসাথে বসে",
+      "Future Perfect শেষ হওয়া বোঝায়; এটি সেই সময় পর্যন্ত চলতে থাকা বোঝায়",
+      "State Verb এই Tense-এ বসে না — will have been knowing ❌",
+      "চার Perfect Continuous-এর পার্থক্য শুধু শুরুতে: have/has been · had been · will have been",
     ],
     formulas: [
       {
-        label: "গঠন",
-        formula: "S + will have been + V-ing + for … + by …",
+        label: "Affirmative",
+        formula: "S + will have been + V-ing + for + সময়কাল + by + সময়",
         example: "By June, I will have been working here for five years.",
+      },
+      {
+        label: "Negative",
+        formula: "S + will not have been + V-ing",
+        example: "She will not have been waiting long.",
+      },
+      {
+        label: "Interrogative",
+        formula: "Will + S + have been + V-ing?",
+        example: "Will you have been studying for three hours by then?",
       },
     ],
     examples: [
       "By next month, they will have been living here for a decade.",
       "By 5 pm, she will have been studying for six hours.",
+      "By the time the match ends, we will have been watching for four hours.",
+      "He will not have been sleeping that long.",
     ],
     wrongRight: [
       {
@@ -846,9 +980,19 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         right: "By June, I will have been working here for five years.",
         why: "'been' বাদ দেওয়া যায় না — will have been + V-ing।",
       },
+      {
+        wrong: "By 5 pm she will have studied for six hours continuously.",
+        right: "By 5 pm she will have been studying for six hours.",
+        why: "একটানা চলতে থাকা বোঝালে Future Perfect Continuous বসে।",
+      },
+      {
+        wrong: "By next year he will have been knowing me for a decade.",
+        right: "By next year he will have known me for a decade.",
+        why: "know একটি State Verb — এর Continuous রূপ হয় না।",
+      },
     ],
     trick:
-      "চারটি Perfect Continuous-এর পার্থক্য শুধু প্রথম শব্দে: **have been / had been / will have been** + V-ing।",
+      "চারটি Perfect Continuous-এর পার্থক্য শুধু প্রথম অংশে: **have/has been · had been · will have been** — তারপর সবসময়ই + V-ing।",
     quiz: [
       {
         q: "‘By December, he ___ in this company for ten years.’",
@@ -872,7 +1016,18 @@ export const TENSE_LESSONS: readonly GrammarLesson[] = [
         answer: 0,
         explain: "will have been + V-ing।",
       },
+      {
+        q: "‘By the time the film ends, we ___ for three hours.’",
+        options: [
+          "will have been watching",
+          "will watch",
+          "have watched",
+          "will be watch",
+        ],
+        answer: 0,
+        explain: "নির্দিষ্ট সময় পর্যন্ত একটানা চলা + সময়কাল।",
+      },
     ],
-    minutes: 5,
+    minutes: 6,
   },
 ];

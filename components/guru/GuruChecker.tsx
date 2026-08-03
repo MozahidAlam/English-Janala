@@ -10,7 +10,6 @@ import {
   verdictFor,
   type GuruLanguage,
 } from "@/lib/api/languagetool";
-import { useProgress } from "@/lib/hooks/useProgress";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { cn, toBn } from "@/lib/utils";
@@ -47,7 +46,6 @@ export function GuruChecker() {
   const [error, setError] = useState<string | null>(null);
   const [focused, setFocused] = useState<number | null>(null);
   const areaRef = useRef<HTMLTextAreaElement>(null);
-  const { addXp } = useProgress();
 
   const wordCount = useMemo(
     () => text.trim().split(/\s+/).filter(Boolean).length,
@@ -62,7 +60,6 @@ export function GuruChecker() {
     try {
       const found = await checkText(text, language);
       setMatches(found);
-      addXp({ xp: 5 });
     } catch (e) {
       setMatches(null);
       setError(
@@ -73,7 +70,7 @@ export function GuruChecker() {
     } finally {
       setChecking(false);
     }
-  }, [text, language, checking, addXp]);
+  }, [text, language, checking]);
 
   const fix = useCallback(
     (match: GuruMatch, replacement: string) => {
@@ -182,8 +179,7 @@ export function GuruChecker() {
       {error ? (
         <div
           role="alert"
-          className="brut font-bangla flex items-center gap-3 p-4"
-          style={{ backgroundColor: "#ffe0e0" }}
+          className="brut tint-coral font-bangla flex items-center gap-3 p-4"
         >
           <span className="text-2xl" aria-hidden>
             ⚠️
@@ -254,8 +250,7 @@ export function GuruChecker() {
                             <button
                               key={r}
                               onClick={() => fix(m, r)}
-                              className="brut-sm brut-press px-3 py-1 text-sm font-bold"
-                              style={{ backgroundColor: "#d7f7ec" }}
+                              className="brut-sm brut-press tint-mint px-3 py-1 text-sm font-bold"
                             >
                               {r || "(মুছে ফেলুন)"}
                             </button>

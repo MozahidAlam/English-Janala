@@ -53,8 +53,7 @@ export function WordCard({
       <div className="mt-1 flex items-center justify-between gap-2">
         <button
           onClick={() => onOpen(word)}
-          className="brut-sm brut-press flex-1 py-2 text-sm font-bold"
-          style={{ backgroundColor: "#cfe9ff" }}
+          className="brut-sm brut-press tint-sky flex-1 py-2 text-sm font-bold"
           aria-label={`${word.word} শব্দের বিস্তারিত`}
         >
           ℹ️ বিস্তারিত
@@ -63,9 +62,9 @@ export function WordCard({
           onClick={() => onSpeak(word)}
           className={cn(
             "brut-sm brut-press flex-1 py-2 text-sm font-bold",
+            "tint-amber",
             speaking && "animate-pulse",
           )}
-          style={{ backgroundColor: "#ffe6b0" }}
           aria-label={`${word.word} উচ্চারণ শুনুন`}
         >
           🔊 শুনুন

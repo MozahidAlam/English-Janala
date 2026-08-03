@@ -5,7 +5,7 @@
  * further out; a wrong answer drops it back to box 1 so it returns tomorrow.
  * Simple, transparent, and good enough to beat plain re-reading by a wide margin.
  */
-import type { ProgressState, SrsCard, SrsBox } from "@/lib/types";
+import type { LearnerState, SrsCard, SrsBox } from "@/lib/types";
 import { addDays, dateKey } from "@/lib/utils";
 
 /** Days until the next review, indexed by box. */
@@ -30,7 +30,7 @@ export function newCard(id: number, today = dateKey()): SrsCard {
 }
 
 export function getCard(
-  state: ProgressState,
+  state: LearnerState,
   id: number,
   today = dateKey(),
 ): SrsCard {
@@ -64,17 +64,17 @@ export function reviewCard(
 
 /** Record a review inside the full progress state. */
 export function applyReview(
-  state: ProgressState,
+  state: LearnerState,
   id: number,
   wasCorrect: boolean,
   today = dateKey(),
-): ProgressState {
+): LearnerState {
   const card = reviewCard(getCard(state, id, today), wasCorrect, today);
   return { ...state, srs: { ...state.srs, [String(id)]: card } };
 }
 
 /** Cards that are due today or overdue, hardest first. */
-export function dueCards(state: ProgressState, today = dateKey()): SrsCard[] {
+export function dueCards(state: LearnerState, today = dateKey()): SrsCard[] {
   return Object.values(state.srs)
     .filter((c) => c.due <= today)
     .sort((a, b) => a.box - b.box || a.due.localeCompare(b.due));
@@ -85,7 +85,7 @@ export function dueCards(state: ProgressState, today = dateKey()): SrsCard[] {
  * session always has something to do.
  */
 export function buildQueue(
-  state: ProgressState,
+  state: LearnerState,
   pool: readonly number[],
   size = 20,
   today = dateKey(),
@@ -100,7 +100,7 @@ export function buildQueue(
 }
 
 /** Words the learner keeps getting wrong — the "weak words" list. */
-export function weakCards(state: ProgressState, limit = 20): SrsCard[] {
+export function weakCards(state: LearnerState, limit = 20): SrsCard[] {
   return Object.values(state.srs)
     .filter((c) => c.lapses > 0)
     .sort((a, b) => {
@@ -111,7 +111,7 @@ export function weakCards(state: ProgressState, limit = 20): SrsCard[] {
     .slice(0, limit);
 }
 
-export function boxCounts(state: ProgressState): Record<SrsBox, number> {
+export function boxCounts(state: LearnerState): Record<SrsBox, number> {
   const counts: Record<SrsBox, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   for (const card of Object.values(state.srs)) counts[card.box] += 1;
   return counts;

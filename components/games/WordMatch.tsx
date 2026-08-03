@@ -8,12 +8,10 @@ import {
   GameIntro,
   GameOver,
   useCountdown,
-  useGameScore,
   type GamePhase,
 } from "@/components/games/GameShell";
 import { cn } from "@/lib/utils";
 
-const SLUG = "word-match";
 const PAIRS = 6;
 const DURATION = 90;
 
@@ -40,15 +38,10 @@ export function WordMatch({ pool }: { pool: readonly WordDetail[] }) {
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [score, setScore] = useState(0);
   const [moves, setMoves] = useState(0);
-  const { best, save } = useGameScore(SLUG);
 
   const end = useCallback(() => setPhase("over"), []);
   const timeLeft = useCountdown(DURATION, phase === "playing", end);
 
-  useEffect(() => {
-    if (phase === "over" && score > 0) save(score);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
 
   // Board cleared before the timer ran out.
   useEffect(() => {
@@ -107,7 +100,6 @@ export function WordMatch({ pool }: { pool: readonly WordDetail[] }) {
           "দুটি কার্ড উল্টে জোড়া মেলান। মিললে থেকে যাবে।",
           `সময় ${toBn(DURATION)} সেকেন্ড। আগে শেষ করলে বাকি সময়ের বোনাস!`,
         ]}
-        best={best}
         onStart={start}
         color="#14c39a"
       />
@@ -118,7 +110,6 @@ export function WordMatch({ pool }: { pool: readonly WordDetail[] }) {
     return (
       <GameOver
         score={score}
-        best={best}
         onRestart={start}
         detail={
           <p className="font-bangla text-sm text-muted">

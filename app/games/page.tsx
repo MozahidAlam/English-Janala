@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { GAMES } from "@/lib/content/games";
 import { SectionHeading, Card } from "@/components/ui/Card";
-import { GameScoreBadge } from "@/components/games/GameScoreBadge";
 
 export const metadata: Metadata = {
   title: "Games — খেলতে খেলতে English শিখুন",
@@ -22,7 +21,7 @@ export default function GamesPage() {
             পড়া নয়, <span className="marker">খেলা</span>
           </>
         }
-        subtitle="মজা করে শিখলে মনে থাকে বেশি। প্রতিটি গেমে আপনার সেরা স্কোর সেভ থাকবে।"
+        subtitle="মজা করে শিখলে মনে থাকে বেশি। যেকোনো গেম বেছে নিন, যতবার খুশি খেলুন।"
         align="center"
       />
 
@@ -30,7 +29,7 @@ export default function GamesPage() {
         {GAMES.map((game) => (
           <Link key={game.slug} href={`/games/${game.slug}`}>
             <Card interactive className="flex h-full flex-col p-6">
-              <div className="mb-4 flex items-start justify-between">
+              <div className="mb-4">
                 <span
                   className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-line text-4xl"
                   style={{ backgroundColor: game.color }}
@@ -38,7 +37,6 @@ export default function GamesPage() {
                 >
                   {game.emoji}
                 </span>
-                <GameScoreBadge slug={game.slug} />
               </div>
               <h2 className="font-bangla text-xl">{game.titleBn}</h2>
               <p className="text-xs font-bold tracking-wide text-muted uppercase">
